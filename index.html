@@ -1,0 +1,1141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Grape to Glass · Level 1 Wine Study</title>
+<meta name="description" content="An interactive study guide for the WSET Level 1 Award in Wines, with a timed mock exam.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;0,800;1,600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#14080e; --bg2:#1f0e17; --card:#2a1420; --card2:#341a28; --line:#4a2638;
+  --text:#f6ece4; --muted:#c7aebb; --dim:#8f7482;
+  --wine:#8e1f43; --wine2:#b8325c; --gold:#e0b25a; --rose:#f0a3b1; --white:#efe0a0;
+  --green:#5fbf8f; --red:#ef6b6b;
+  --radius:18px; --shadow:0 18px 40px rgba(0,0,0,.35);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--text);font-family:Inter,system-ui,sans-serif;line-height:1.6;overflow-x:hidden}
+h1,h2,h3{font-family:"Playfair Display",Georgia,serif;line-height:1.15}
+button{font-family:inherit;cursor:pointer}
+a{color:var(--gold)}
+.wrap{max-width:1120px;margin:0 auto;padding:0 20px}
+@media(max-width:600px){.wrap{padding:0 16px}}
+
+/* NAV */
+nav{position:sticky;top:0;z-index:50;background:rgba(20,8,14,.86);backdrop-filter:blur(12px);border-bottom:1px solid var(--line)}
+nav .wrap{display:flex;align-items:center;gap:14px;height:62px}
+.logo{font-family:"Playfair Display",serif;font-weight:800;font-size:1.2rem;white-space:nowrap;display:flex;align-items:center;gap:8px}
+.logo span{color:var(--gold)}
+.navlinks{display:flex;gap:4px;overflow-x:auto;scrollbar-width:none;flex:1}
+.navlinks::-webkit-scrollbar{display:none}
+.navlinks a{color:var(--muted);text-decoration:none;font-size:.88rem;padding:6px 12px;border-radius:99px;white-space:nowrap;transition:.2s}
+.navlinks a:hover,.navlinks a.active{background:var(--card2);color:var(--text)}
+.prog{width:120px;flex-shrink:0}
+.prog small{font-size:.7rem;color:var(--dim);display:block}
+.bar{height:6px;background:var(--card2);border-radius:9px;overflow:hidden}
+.bar i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--wine2),var(--gold));transition:width .6s}
+@media(max-width:760px){.prog{display:none}.logo b{display:none}}
+
+/* HERO */
+.hero{position:relative;min-height:88vh;display:flex;align-items:center;overflow:hidden;
+  background:radial-gradient(ellipse at 70% 40%,#4a1028 0%,transparent 60%),radial-gradient(ellipse at 10% 90%,#2b0f20 0%,transparent 55%)}
+.hero .wrap{display:grid;grid-template-columns:1.2fr .8fr;gap:40px;align-items:center;position:relative;z-index:2}
+.hero h1{font-size:clamp(2.6rem,6vw,4.6rem);font-weight:800}
+.hero h1 em{color:var(--gold);font-style:italic}
+.hero p.lead{color:var(--muted);font-size:1.15rem;margin:18px 0 28px;max-width:560px}
+.stats{display:flex;gap:26px;margin-top:34px;flex-wrap:wrap}
+.stats div b{font-family:"Playfair Display";font-size:2rem;color:var(--gold);display:block;line-height:1}
+.stats div span{font-size:.8rem;color:var(--dim);text-transform:uppercase;letter-spacing:.08em}
+.btn{display:inline-flex;align-items:center;gap:8px;padding:13px 24px;border-radius:99px;border:none;font-weight:600;font-size:.95rem;text-decoration:none;transition:.2s}
+.btn.primary{background:linear-gradient(135deg,var(--wine2),var(--wine));color:#fff;box-shadow:0 8px 24px rgba(184,50,92,.4)}
+.btn.primary:hover{transform:translateY(-2px);box-shadow:0 12px 30px rgba(184,50,92,.55)}
+.btn.ghost{background:transparent;color:var(--text);border:1px solid var(--line)}
+.btn.ghost:hover{border-color:var(--gold);color:var(--gold)}
+.btn.small{padding:8px 16px;font-size:.85rem}
+.btn:disabled{opacity:.4;pointer-events:none}
+.glass-wrap{display:flex;justify-content:center}
+.glass-svg{width:min(300px,70vw);filter:drop-shadow(0 20px 40px rgba(142,31,67,.5))}
+.wine-fill{animation:pour 3.5s ease-out forwards;transform-origin:bottom}
+@keyframes pour{from{transform:scaleY(0)}to{transform:scaleY(1)}}
+.wave{animation:wave 3s ease-in-out infinite}
+@keyframes wave{0%,100%{transform:translateX(0)}50%{transform:translateX(-12px)}}
+.bubble{position:absolute;bottom:-20px;border-radius:50%;background:radial-gradient(circle at 30% 30%,rgba(255,240,200,.6),rgba(224,178,90,.08));animation:rise linear infinite;z-index:1}
+@keyframes rise{to{transform:translateY(-110vh) translateX(20px);opacity:0}}
+@media(max-width:820px){.hero .wrap{grid-template-columns:1fr;text-align:left}.glass-wrap{order:-1}.glass-svg{width:180px}.hero{min-height:auto;padding:40px 0 60px}}
+
+/* SECTIONS */
+section.mod{padding:90px 0;border-top:1px solid var(--line)}
+section.mod:nth-of-type(even){background:var(--bg2)}
+.kicker{color:var(--gold);font-size:.78rem;font-weight:700;letter-spacing:.16em;text-transform:uppercase}
+.mod h2{font-size:clamp(2rem,4vw,2.8rem);margin:6px 0 12px}
+.intro{color:var(--muted);max-width:720px;margin-bottom:36px;font-size:1.05rem}
+.grid{display:grid;gap:18px}
+.g2{grid-template-columns:repeat(auto-fit,minmax(300px,1fr))}
+.g3{grid-template-columns:repeat(auto-fit,minmax(240px,1fr))}
+.g4{grid-template-columns:repeat(auto-fit,minmax(200px,1fr))}
+.card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:24px;position:relative;overflow:hidden}
+.card h3{font-size:1.3rem;margin-bottom:8px}
+.card p,.card li{color:var(--muted);font-size:.95rem}
+.card ul{padding-left:18px}
+.tag{display:inline-block;font-size:.72rem;font-weight:600;padding:3px 10px;border-radius:99px;background:var(--card2);color:var(--muted);margin:2px 4px 2px 0}
+.panel-title{font-family:"Playfair Display";font-size:1.5rem;margin:50px 0 16px}
+.reveal{opacity:0;transform:translateY(30px);transition:opacity .8s,transform .8s}
+.reveal.in{opacity:1;transform:none}
+.done-row{margin-top:40px;display:flex;gap:12px;flex-wrap:wrap;align-items:center}
+.done-btn.on{background:var(--green);color:#0d2418;border-color:var(--green)}
+.tip{border-left:3px solid var(--gold);background:rgba(224,178,90,.08);padding:14px 18px;border-radius:0 12px 12px 0;margin-top:20px;color:var(--text);font-size:.95rem}
+.tip b{color:var(--gold)}
+
+/* style explorer */
+.style-card{cursor:pointer;transition:.3s;text-align:center}
+.style-card:hover{transform:translateY(-6px);border-color:var(--gold)}
+.style-card .ico{font-size:2.6rem}
+.style-card .more{max-height:0;overflow:hidden;transition:max-height .4s;text-align:left}
+.style-card.open .more{max-height:300px;margin-top:12px}
+.colour-row{display:flex;gap:14px;flex-wrap:wrap;justify-content:center;margin:20px 0}
+.swatch{width:86px;text-align:center;font-size:.78rem;color:var(--muted);cursor:pointer}
+.swatch .dot{width:70px;height:70px;border-radius:50%;margin:0 auto 6px;border:3px solid transparent;transition:.25s;box-shadow:inset 0 -10px 20px rgba(0,0,0,.25)}
+.swatch.sel .dot,.swatch:hover .dot{border-color:var(--gold);transform:scale(1.08)}
+.slider-box{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:24px}
+input[type=range]{width:100%;accent-color:var(--wine2);height:30px}
+.scale-labels{display:flex;justify-content:space-between;font-size:.78rem;color:var(--dim)}
+.slider-out{margin-top:12px;min-height:72px}
+.slider-out b{color:var(--gold);font-size:1.1rem}
+
+/* grape anatomy */
+.anatomy{display:grid;grid-template-columns:280px 1fr;gap:28px;align-items:center}
+@media(max-width:700px){.anatomy{grid-template-columns:1fr}}
+.anatomy svg .part{cursor:pointer;transition:.25s}
+.anatomy svg .part:hover,.anatomy svg .part.sel{filter:brightness(1.4) drop-shadow(0 0 6px #e0b25a)}
+.info-box{min-height:150px}
+.info-box h3{color:var(--gold)}
+
+/* climate */
+.toggle{display:inline-flex;background:var(--card2);border-radius:99px;padding:4px;margin-bottom:20px}
+.toggle button{border:none;background:transparent;color:var(--muted);padding:8px 20px;border-radius:99px;font-weight:600;transition:.25s}
+.toggle button.on{background:var(--wine2);color:#fff}
+.climate-view{display:grid;grid-template-columns:200px 1fr;gap:24px;align-items:center}
+@media(max-width:600px){.climate-view{grid-template-columns:1fr}}
+.sun{transition:all .8s}
+.meter{margin:10px 0}
+.meter label{display:flex;justify-content:space-between;font-size:.85rem;color:var(--muted)}
+.meter .bar{height:10px;margin-top:4px}
+.meter .bar i{transition:width .8s cubic-bezier(.3,1.4,.5,1)}
+
+/* steps */
+.steps{display:flex;flex-direction:column;gap:0;position:relative;margin-top:10px}
+.step{display:flex;gap:16px;padding:14px 0;opacity:0;transform:translateX(-20px);animation:slidein .5s forwards}
+@keyframes slidein{to{opacity:1;transform:none}}
+.step .num{flex-shrink:0;width:40px;height:40px;border-radius:50%;display:grid;place-items:center;font-weight:700;background:var(--wine);border:2px solid var(--wine2)}
+.step h4{font-size:1rem}
+.step p{color:var(--muted);font-size:.92rem}
+.equation{display:flex;align-items:center;justify-content:center;gap:14px;flex-wrap:wrap;font-weight:600;margin:10px 0}
+.equation .pill{background:var(--card2);border:1px solid var(--line);padding:10px 16px;border-radius:14px;text-align:center}
+.equation .pill small{display:block;font-weight:400;color:var(--dim);font-size:.72rem}
+.equation .op{color:var(--gold);font-size:1.4rem}
+
+/* grapes */
+.filters{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:22px}
+.chip{border:1px solid var(--line);background:var(--card);color:var(--muted);padding:7px 16px;border-radius:99px;font-size:.88rem;transition:.2s}
+.chip.on,.chip:hover{border-color:var(--gold);color:var(--text);background:var(--card2)}
+.flip{perspective:1200px;height:380px;cursor:pointer}
+.flip-inner{position:relative;width:100%;height:100%;transition:transform .7s cubic-bezier(.3,1.3,.5,1);transform-style:preserve-3d}
+.flip.flipped .flip-inner{transform:rotateY(180deg)}
+.face{position:absolute;inset:0;backface-visibility:hidden;-webkit-backface-visibility:hidden;border-radius:var(--radius);padding:22px;border:1px solid var(--line);display:flex;flex-direction:column}
+.front{justify-content:flex-end;overflow:hidden}
+.front .berry{position:absolute;top:22px;right:22px;display:grid;grid-template-columns:repeat(3,22px);gap:2px;opacity:.95}
+.front .berry i{width:22px;height:22px;border-radius:50%;box-shadow:inset -4px -4px 8px rgba(0,0,0,.35),inset 3px 3px 6px rgba(255,255,255,.25)}
+.front h3{font-size:1.7rem}
+.front .hint{font-size:.75rem;color:rgba(255,255,255,.65);margin-top:6px}
+.back{transform:rotateY(180deg);background:var(--card2);overflow-y:auto}
+.back h4{font-family:"Playfair Display";font-size:1.15rem;color:var(--gold);margin-bottom:6px}
+.back dl{font-size:.84rem}
+.back dt{color:var(--dim);font-size:.7rem;text-transform:uppercase;letter-spacing:.08em;margin-top:8px}
+.back dd{color:var(--text)}
+
+/* tasting */
+.sat{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:16px}
+.sat .card .big{font-size:2.2rem}
+.builder{display:grid;grid-template-columns:1fr 1fr;gap:24px;margin-top:10px}
+@media(max-width:760px){.builder{grid-template-columns:1fr}}
+.field{margin-bottom:14px}
+.field>span{display:block;font-size:.78rem;color:var(--dim);text-transform:uppercase;letter-spacing:.08em;margin-bottom:6px}
+.opts{display:flex;flex-wrap:wrap;gap:6px}
+.opts button{border:1px solid var(--line);background:var(--bg2);color:var(--muted);padding:6px 12px;border-radius:99px;font-size:.82rem;transition:.15s}
+.opts button.on{background:var(--wine);color:#fff;border-color:var(--wine2)}
+.note-out{background:linear-gradient(160deg,#3a1a2a,#22101a);border:1px solid var(--line);border-radius:var(--radius);padding:24px;position:sticky;top:80px}
+.note-out .glassdot{width:80px;height:80px;border-radius:50%;margin-bottom:14px;transition:background .5s;box-shadow:inset 0 -12px 20px rgba(0,0,0,.3),0 0 30px rgba(0,0,0,.3)}
+.note-out p{font-family:"Playfair Display";font-style:italic;font-size:1.15rem;line-height:1.5}
+.mystery{text-align:center}
+.mystery .desc{font-family:"Playfair Display";font-style:italic;font-size:1.25rem;margin:16px auto 20px;max-width:640px}
+.mystery .opts{justify-content:center}
+.mystery .opts button{font-size:.92rem;padding:9px 16px}
+.mystery .opts button.right{background:var(--green);color:#0d2418;border-color:var(--green)}
+.mystery .opts button.wrong{background:var(--red);color:#fff;border-color:var(--red)}
+.mres{min-height:28px;margin-top:14px;color:var(--muted)}
+
+/* pairing */
+.pair{display:grid;grid-template-columns:1fr 1.1fr;gap:24px}
+@media(max-width:800px){.pair{grid-template-columns:1fr}}
+.food-btns{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.food-btns button{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:14px 6px;color:var(--text);font-size:.85rem;transition:.2s}
+.food-btns button .e{font-size:1.8rem;display:block}
+.food-btns button.on{border-color:var(--gold);background:var(--card2);box-shadow:0 0 0 2px rgba(224,178,90,.3)}
+.wine-sel{display:flex;flex-direction:column;gap:8px;margin-top:16px}
+.wine-sel button{text-align:left;background:var(--card);border:1px solid var(--line);color:var(--muted);padding:10px 14px;border-radius:12px;font-size:.88rem;display:flex;gap:10px;align-items:center}
+.wine-sel button i{width:16px;height:16px;border-radius:50%;flex-shrink:0}
+.wine-sel button.on{border-color:var(--gold);color:var(--text)}
+.attr{display:grid;grid-template-columns:110px 1fr 54px;align-items:center;gap:10px;margin:12px 0;font-size:.88rem}
+.attr .track{height:14px;background:var(--bg);border-radius:9px;position:relative;overflow:hidden}
+.attr .base{position:absolute;top:0;bottom:0;border-right:2px dashed rgba(255,255,255,.5);z-index:2;transition:left .6s}
+.attr .fill{height:100%;border-radius:9px;transition:width .8s cubic-bezier(.3,1.3,.5,1),background .5s}
+.attr .delta{font-weight:700;font-size:.8rem;text-align:right}
+.up{color:var(--red)}.down{color:#7ec8ff}
+.verdict{margin-top:16px;padding:14px 16px;border-radius:12px;background:var(--bg);font-size:.92rem;color:var(--muted);min-height:70px}
+.rules{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:14px;margin-top:20px}
+.rules .card{padding:18px}
+.risk{font-size:.7rem;font-weight:700;padding:2px 8px;border-radius:6px;margin-left:6px;vertical-align:middle}
+.risk.h{background:rgba(239,107,107,.2);color:var(--red)}
+.risk.l{background:rgba(95,191,143,.2);color:var(--green)}
+
+/* service */
+.thermo{display:grid;grid-template-columns:150px 1fr;gap:28px;align-items:center}
+@media(max-width:600px){.thermo{grid-template-columns:110px 1fr}}
+.tube{position:relative;width:46px;height:320px;margin:0 auto;background:var(--bg);border:3px solid var(--line);border-radius:30px 30px 30px 30px}
+.tube .merc{position:absolute;bottom:0;left:0;right:0;border-radius:0 0 26px 26px;background:linear-gradient(0deg,var(--wine),var(--wine2));transition:height 1s cubic-bezier(.3,1.3,.5,1),background .6s;height:20%}
+.tube .ticks{position:absolute;left:54px;top:0;bottom:0;font-size:.72rem;color:var(--dim)}
+.tube .ticks span{position:absolute;white-space:nowrap}
+.temp-read{font-family:"Playfair Display";font-size:2.4rem;color:var(--gold)}
+.temp-btns{display:flex;flex-direction:column;gap:8px}
+.temp-btns button{text-align:left;background:var(--card);border:1px solid var(--line);color:var(--text);padding:10px 14px;border-radius:12px;font-size:.9rem;transition:.2s}
+.temp-btns button.on{border-color:var(--gold);background:var(--card2)}
+.temp-btns button small{color:var(--dim);display:block;font-size:.76rem}
+.calc{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:14px;align-items:end}
+.calc label{font-size:.8rem;color:var(--dim)}
+.calc input,.calc select{width:100%;background:var(--bg);border:1px solid var(--line);color:var(--text);padding:10px 12px;border-radius:10px;font-size:1rem;margin-top:4px}
+.units-out{font-family:"Playfair Display";font-size:2.2rem;color:var(--gold)}
+
+/* EXAM */
+#exam{background:radial-gradient(ellipse at 50% 0%,#3d1024 0%,var(--bg) 70%)}
+.exam-shell{background:var(--card);border:1px solid var(--line);border-radius:24px;padding:32px;box-shadow:var(--shadow)}
+@media(max-width:600px){.exam-shell{padding:20px}}
+.modes{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:18px}
+.mode{background:var(--bg2);border:1px solid var(--line);border-radius:var(--radius);padding:24px;display:flex;flex-direction:column;gap:10px}
+.mode h3{font-size:1.4rem}
+.mode ul{color:var(--muted);font-size:.9rem;padding-left:18px;flex:1}
+.mode select{background:var(--bg);color:var(--text);border:1px solid var(--line);padding:9px;border-radius:10px;font-size:.9rem}
+.exam-top{display:flex;justify-content:space-between;align-items:center;gap:14px;flex-wrap:wrap;margin-bottom:18px}
+.timer{font-variant-numeric:tabular-nums;font-weight:700;font-size:1.15rem;background:var(--bg);padding:6px 14px;border-radius:10px;border:1px solid var(--line)}
+.timer.warn{color:var(--red);border-color:var(--red);animation:pulse 1s infinite}
+@keyframes pulse{50%{opacity:.6}}
+.qtopic{font-size:.75rem;color:var(--gold);text-transform:uppercase;letter-spacing:.1em}
+.qtext{font-size:1.3rem;font-family:"Playfair Display";margin:8px 0 20px;min-height:60px}
+.answers{display:flex;flex-direction:column;gap:10px}
+.ans{display:flex;gap:14px;align-items:center;text-align:left;background:var(--bg2);border:1px solid var(--line);color:var(--text);padding:14px 16px;border-radius:14px;font-size:1rem;transition:.15s}
+.ans:hover{border-color:var(--dim)}
+.ans .L{flex-shrink:0;width:32px;height:32px;border-radius:50%;display:grid;place-items:center;background:var(--card2);font-weight:700;font-size:.85rem}
+.ans.sel{border-color:var(--gold);background:var(--card2)}
+.ans.sel .L{background:var(--gold);color:#2a1420}
+.ans.right{border-color:var(--green);background:rgba(95,191,143,.14)}
+.ans.right .L{background:var(--green);color:#0d2418}
+.ans.wrong{border-color:var(--red);background:rgba(239,107,107,.12)}
+.ans.wrong .L{background:var(--red)}
+.explain{margin-top:16px;padding:14px 18px;border-radius:12px;background:var(--bg);color:var(--muted);font-size:.93rem;display:none}
+.explain.show{display:block;animation:slidein .4s}
+.exam-nav{display:flex;justify-content:space-between;gap:10px;margin-top:22px;flex-wrap:wrap}
+.qgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(36px,1fr));gap:6px;margin-top:22px}
+.qgrid button{aspect-ratio:1;border:1px solid var(--line);background:var(--bg2);color:var(--muted);border-radius:8px;font-size:.78rem;font-weight:600;position:relative}
+.qgrid button.ans-d{background:var(--card2);color:var(--text);border-color:var(--dim)}
+.qgrid button.cur{border-color:var(--gold);color:var(--gold)}
+.qgrid button.flag::after{content:"";position:absolute;top:2px;right:2px;width:7px;height:7px;border-radius:50%;background:var(--rose)}
+.flagbtn.on{color:var(--rose);border-color:var(--rose)}
+.result-top{display:grid;grid-template-columns:200px 1fr;gap:30px;align-items:center}
+@media(max-width:640px){.result-top{grid-template-columns:1fr;justify-items:center;text-align:center}}
+.ring{width:190px;height:190px}
+.ring circle{fill:none;stroke-width:14}
+.ring .fg{stroke-linecap:round;transform:rotate(-90deg);transform-origin:center;transition:stroke-dashoffset 1.6s cubic-bezier(.3,1,.4,1)}
+.verdict-big{font-family:"Playfair Display";font-size:2.4rem}
+.pass{color:var(--green)}.fail{color:var(--red)}
+.topic-bars .attr{grid-template-columns:150px 1fr 60px}
+.review-item{border-top:1px solid var(--line);padding:16px 0}
+.review-item .q{font-weight:600}
+.review-item .a{font-size:.9rem;margin-top:4px}
+.review-item .e{font-size:.86rem;color:var(--dim);margin-top:4px}
+.hidden{display:none!important}
+.confetti{position:fixed;top:-10px;width:10px;height:14px;z-index:200;animation:fall linear forwards;pointer-events:none}
+@keyframes fall{to{transform:translateY(105vh) rotate(720deg)}}
+.mini{margin-top:40px}
+.mini .card{padding:22px}
+
+footer{padding:40px 0;text-align:center;color:var(--dim);font-size:.82rem;border-top:1px solid var(--line)}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}.reveal{opacity:1;transform:none}}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="wrap">
+    <div class="logo">🍷 <b>Grape <span>to</span> Glass</b></div>
+    <div class="navlinks" id="navlinks">
+      <a href="#styles">1 · Styles</a>
+      <a href="#making">2 · Making</a>
+      <a href="#grapes">3 · Grapes</a>
+      <a href="#tasting">4 · Tasting</a>
+      <a href="#pairing">5 · Food</a>
+      <a href="#service">6 · Service</a>
+      <a href="#exam">✦ Mock Exam</a>
+    </div>
+    <div class="prog"><small id="progTxt">0 of 6 modules</small><div class="bar"><i id="progBar"></i></div></div>
+  </div>
+</nav>
+
+<!-- HERO -->
+<header class="hero" id="top">
+  <div class="wrap">
+    <div>
+      <div class="kicker">Level 1 Award in Wines · Study Companion</div>
+      <h1>From the vine<br>to your <em>glass</em>.</h1>
+      <p class="lead">Six bite-sized, hands-on modules covering everything in the Level 1 syllabus — then a timed mock exam built to the real format.</p>
+      <a href="#styles" class="btn primary">Start learning →</a>
+      <a href="#exam" class="btn ghost" style="margin-left:8px">Jump to the exam</a>
+      <div class="stats">
+        <div><b>30</b><span>Questions</span></div>
+        <div><b>45</b><span>Minutes</span></div>
+        <div><b>70%</b><span>To pass</span></div>
+        <div><b>8</b><span>Key grapes</span></div>
+      </div>
+    </div>
+    <div class="glass-wrap">
+      <svg class="glass-svg" viewBox="0 0 200 320" aria-hidden="true">
+        <defs>
+          <clipPath id="bowl"><path d="M40 20 Q30 120 60 160 Q100 195 140 160 Q170 120 160 20 Z"/></clipPath>
+          <linearGradient id="wineG" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#c0365f"/><stop offset="1" stop-color="#5a0f2a"/></linearGradient>
+        </defs>
+        <g clip-path="url(#bowl)">
+          <g class="wine-fill">
+            <path class="wave" d="M10 95 Q45 85 80 95 T150 95 T220 95 V200 H10 Z" fill="url(#wineG)"/>
+          </g>
+        </g>
+        <path d="M40 20 Q30 120 60 160 Q100 195 140 160 Q170 120 160 20 Z" fill="rgba(255,255,255,.06)" stroke="rgba(255,255,255,.55)" stroke-width="3"/>
+        <path d="M56 40 Q50 100 66 140" stroke="rgba(255,255,255,.35)" stroke-width="4" fill="none" stroke-linecap="round"/>
+        <rect x="96" y="176" width="8" height="100" fill="rgba(255,255,255,.5)"/>
+        <ellipse cx="100" cy="284" rx="50" ry="10" fill="rgba(255,255,255,.45)"/>
+      </svg>
+    </div>
+  </div>
+</header>
+
+<!-- MODULE 1 -->
+<section class="mod" id="styles">
+  <div class="wrap">
+    <div class="kicker">Module 1</div>
+    <h2>Types &amp; styles of wine</h2>
+    <p class="intro">Every wine can be described by its <b>type</b> (still, sparkling or fortified), its <b>colour</b>, its <b>sweetness</b> and its <b>body</b>. Tap the cards to explore.</p>
+
+    <div class="grid g3 reveal">
+      <div class="card style-card" onclick="this.classList.toggle('open')">
+        <div class="ico">🍷</div><h3>Still</h3><p>No noticeable bubbles. The vast majority of wine.</p>
+        <div class="more"><ul><li>Usually about <b>8–15% ABV</b>.</li><li>Can be white, rosé or red; dry to sweet.</li><li>Examples: Chablis, Rioja, Sancerre, Barossa Shiraz.</li></ul></div>
+      </div>
+      <div class="card style-card" onclick="this.classList.toggle('open')">
+        <div class="ico">🥂</div><h3>Sparkling</h3><p>Bubbles of carbon dioxide trapped in the wine.</p>
+        <div class="more"><ul><li>CO₂ from a <b>second fermentation</b> in a sealed container is trapped, creating bubbles.</li><li>Usually around 12% ABV (some lighter).</li><li>Examples: Champagne, Cava (bottle) and Prosecco (tank).</li></ul></div>
+      </div>
+      <div class="card style-card" onclick="this.classList.toggle('open')">
+        <div class="ico">🥃</div><h3>Fortified</h3><p>Grape spirit has been added to the wine.</p>
+        <div class="more"><ul><li>Higher alcohol: usually <b>15–22% ABV</b>.</li><li>Can be dry (e.g. Fino Sherry) or sweet (e.g. Port).</li><li>Examples: Port, Sherry.</li></ul></div>
+      </div>
+    </div>
+
+    <h3 class="panel-title">Colour</h3>
+    <div class="colour-row reveal" id="colourRow"></div>
+    <div class="card reveal" id="colourInfo"><p>Tap a colour above.</p></div>
+
+    <h3 class="panel-title">Sweetness &amp; body</h3>
+    <div class="grid g2 reveal">
+      <div class="slider-box">
+        <b>Sweetness</b>
+        <input type="range" min="0" max="2" step="1" value="0" id="sweetR" aria-label="Sweetness">
+        <div class="scale-labels"><span>Dry</span><span>Medium</span><span>Sweet</span></div>
+        <div class="slider-out" id="sweetOut"></div>
+      </div>
+      <div class="slider-box">
+        <b>Body</b>
+        <input type="range" min="0" max="2" step="1" value="0" id="bodyR" aria-label="Body">
+        <div class="scale-labels"><span>Light</span><span>Medium</span><span>Full</span></div>
+        <div class="slider-out" id="bodyOut"></div>
+      </div>
+    </div>
+    <div class="tip reveal"><b>Exam tip:</b> Body is the feeling of weight in the mouth — think skimmed milk (light) vs. whole milk (full). Alcohol, sugar and tannin all add body.</div>
+
+    <div class="mini" data-topic="types"></div>
+    <div class="done-row"><button class="btn ghost done-btn" data-mod="styles">✓ Mark module complete</button></div>
+  </div>
+</section>
+
+<!-- MODULE 2 -->
+<section class="mod" id="making">
+  <div class="wrap">
+    <div class="kicker">Module 2</div>
+    <h2>Grape growing &amp; winemaking</h2>
+    <p class="intro">Wine is simply fermented grape juice — but the parts of the grape, the climate and the winemaker's choices shape everything in your glass.</p>
+
+    <h3 class="panel-title" style="margin-top:0">Anatomy of a grape</h3>
+    <div class="card anatomy reveal">
+      <svg viewBox="0 0 260 260" width="100%" style="max-width:260px;margin:auto" role="img" aria-label="Grape diagram">
+        <rect class="part" data-p="stem" x="122" y="6" width="16" height="50" rx="6" fill="#6b8f3a"/>
+        <circle class="part" data-p="skin" cx="130" cy="150" r="100" fill="#4a1835"/>
+        <circle class="part" data-p="pulp" cx="130" cy="150" r="84" fill="#cbd99a"/>
+        <ellipse class="part" data-p="seeds" cx="105" cy="150" rx="12" ry="20" fill="#7a4a1e"/>
+        <ellipse class="part" data-p="seeds" cx="155" cy="150" rx="12" ry="20" fill="#7a4a1e"/>
+        <text x="130" y="248" text-anchor="middle" fill="#c7aebb" font-size="12">tap a part</text>
+      </svg>
+      <div class="info-box" id="anatInfo"><h3>Tap a part of the grape</h3><p>Each part contributes something different to the finished wine.</p></div>
+    </div>
+
+    <h3 class="panel-title">The vine's year &amp; ripening</h3>
+    <div class="grid g3 reveal">
+      <div class="card"><h3>☀️ Photosynthesis</h3><p>Leaves use <b>sunlight</b>, <b>carbon dioxide</b> and <b>water</b> to make sugar, which is stored in the grapes. Vines also need warmth and nutrients.</p></div>
+      <div class="card"><h3>🍇 Ripening</h3><p>As grapes ripen: <b>sugar rises</b>, <b>acidity falls</b>, black grapes gain colour and tannins ripen. Fruit flavours move from green to riper.</p></div>
+      <div class="card"><h3>✂️ Harvest</h3><p>The grower picks when sugar, acid and flavour are in balance for the style wanted. Picked later = more sugar = more potential alcohol or sweetness.</p></div>
+    </div>
+
+    <h3 class="panel-title">Climate: cool vs. warm</h3>
+    <div class="card reveal">
+      <div class="toggle" id="climToggle"><button class="on" data-c="cool">❄️ Cool climate</button><button data-c="warm">☀️ Warm climate</button></div>
+      <div class="climate-view">
+        <svg viewBox="0 0 200 160" width="100%" style="max-width:200px">
+          <circle class="sun" id="sunC" cx="160" cy="36" r="18" fill="#e0b25a" opacity=".5"/>
+          <g id="bunch"></g>
+        </svg>
+        <div>
+          <div id="climMeters"></div>
+          <p id="climFlav" style="margin-top:10px;color:var(--muted)"></p>
+        </div>
+      </div>
+    </div>
+
+    <h3 class="panel-title">Fermentation</h3>
+    <div class="card reveal">
+      <div class="equation">
+        <div class="pill">🍬 Sugar<small>in grape juice</small></div><div class="op">+</div>
+        <div class="pill">🦠 Yeast<small>the worker</small></div><div class="op">→</div>
+        <div class="pill">🍷 Alcohol<small>ethanol</small></div><div class="op">+</div>
+        <div class="pill">🫧 Carbon dioxide<small>gas (escapes)</small></div>
+      </div>
+      <p style="text-align:center;color:var(--muted);margin-top:8px">Fermentation also produces heat. If it stops before all sugar is used, the wine is left with some sweetness.</p>
+    </div>
+
+    <h3 class="panel-title">How each colour is made</h3>
+    <div class="card reveal">
+      <div class="toggle" id="makeToggle"><button class="on" data-m="white">White</button><button data-m="rose">Rosé</button><button data-m="red">Red</button></div>
+      <div class="steps" id="makeSteps"></div>
+    </div>
+    <div class="tip reveal"><b>Key fact:</b> The juice of almost all black grapes is colourless — colour and tannin come from the <b>skins</b>. So white wine can be made from black grapes if the juice is separated quickly.</div>
+
+    <div class="mini" data-topic="making"></div>
+    <div class="done-row"><button class="btn ghost done-btn" data-mod="making">✓ Mark module complete</button></div>
+  </div>
+</section>
+
+<!-- MODULE 3 -->
+<section class="mod" id="grapes">
+  <div class="wrap">
+    <div class="kicker">Module 3</div>
+    <h2>The eight key grapes</h2>
+    <p class="intro">The heart of the exam. Four white and four black varieties — learn each one's style, typical flavours and the places it's famous. <b>Tap a card to flip it.</b></p>
+    <div class="filters" id="grapeFilters">
+      <button class="chip on" data-f="all">All 8</button>
+      <button class="chip" data-f="white">White grapes</button>
+      <button class="chip" data-f="black">Black grapes</button>
+    </div>
+    <div class="grid g4" id="grapeGrid"></div>
+    <div class="tip reveal"><b>Memory hook:</b> Light → full reds: <b>Pinot Noir</b> (light, low tannin) → <b>Merlot</b> (soft, medium) → <b>Syrah/Shiraz</b> &amp; <b>Cabernet Sauvignon</b> (full, high tannin). Bordeaux blends Cabernet Sauvignon and Merlot.</div>
+    <div class="mini" data-topic="grapes"></div>
+    <div class="done-row"><button class="btn ghost done-btn" data-mod="grapes">✓ Mark module complete</button></div>
+  </div>
+</section>
+
+<!-- MODULE 4 -->
+<section class="mod" id="tasting">
+  <div class="wrap">
+    <div class="kicker">Module 4</div>
+    <h2>Tasting lab</h2>
+    <p class="intro">The Level 1 Systematic Approach to Tasting follows three steps: <b>look</b>, <b>smell</b>, <b>taste</b> — then a conclusion. Build your own tasting note below.</p>
+    <div class="sat reveal">
+      <div class="card"><div class="big">👁️</div><h3>Appearance</h3><p>Tilt the glass against a white background. Note <b>intensity</b> (pale → deep) and <b>colour</b>: lemon/gold/amber; pink; purple/ruby/garnet/tawny. Whites deepen and reds pale (towards brown) with age.</p></div>
+      <div class="card"><div class="big">👃</div><h3>Nose</h3><p>Swirl to release aromas, then sniff. Look for fruit (green, citrus, tropical, red, black), floral, spice, vegetal and oak notes (vanilla, toast).</p></div>
+      <div class="card"><div class="big">👅</div><h3>Palate</h3><p><b>Sweetness</b> (tip of tongue), <b>acidity</b> (mouth-watering), <b>tannin</b> (drying, grips gums), <b>body</b> (weight), <b>flavours</b>, <b>finish</b> (how long it lasts).</p></div>
+      <div class="card"><div class="big">🧐</div><h3>Conclusion</h3><p>Is the wine balanced? Does it have flavour intensity and length? Do you like it — and why?</p></div>
+    </div>
+
+    <h3 class="panel-title">Tasting-note builder</h3>
+    <div class="builder reveal">
+      <div class="card" id="noteFields"></div>
+      <div><div class="note-out"><div class="glassdot" id="noteGlass"></div><p id="noteText"></p></div></div>
+    </div>
+
+    <h3 class="panel-title">Mystery glass challenge</h3>
+    <div class="card mystery reveal">
+      <div class="kicker">Which grape fits this note?</div>
+      <div class="desc" id="mDesc"></div>
+      <div class="opts" id="mOpts"></div>
+      <div class="mres" id="mRes"></div>
+      <button class="btn ghost small" id="mNext" style="margin-top:10px">Next glass →</button>
+      <div style="margin-top:10px;font-size:.85rem;color:var(--dim)">Score: <b id="mScore">0 / 0</b></div>
+    </div>
+
+    <div class="mini" data-topic="tasting"></div>
+    <div class="done-row"><button class="btn ghost done-btn" data-mod="tasting">✓ Mark module complete</button></div>
+  </div>
+</section>
+
+<!-- MODULE 5 -->
+<section class="mod" id="pairing">
+  <div class="wrap">
+    <div class="kicker">Module 5</div>
+    <h2>Food &amp; wine pairing</h2>
+    <p class="intro">Food changes how a wine tastes. Pick a wine, then pick a food component and watch what happens to the wine on your palate. The dashed line shows the wine on its own.</p>
+    <div class="pair reveal">
+      <div>
+        <div class="food-btns" id="foodBtns"></div>
+        <div class="wine-sel" id="wineSel"></div>
+      </div>
+      <div class="card">
+        <h3 id="pairTitle">Wine on its own</h3>
+        <div id="pairBars"></div>
+        <div class="verdict" id="pairVerdict"></div>
+      </div>
+    </div>
+    <div class="rules reveal">
+      <div class="card"><h3>Sweetness <span class="risk h">HIGH RISK</span></h3><p>Makes wine taste more bitter, more acidic and less fruity/sweet. Rule: the wine should be <b>at least as sweet</b> as the food.</p></div>
+      <div class="card"><h3>Umami <span class="risk h">HIGH RISK</span></h3><p>(Mushrooms, ripe cheese, cured meat, asparagus.) Like sweetness: wine seems more bitter, drying and acidic, less fruity. Salt helps balance it.</p></div>
+      <div class="card"><h3>Acidity <span class="risk l">LOW RISK</span></h3><p>Makes wine seem less acidic and richer, fruitier and sweeter. Pick a wine with at least as much acidity as the food.</p></div>
+      <div class="card"><h3>Salt <span class="risk l">LOW RISK</span></h3><p>Makes wine seem less bitter and less acidic, and smoother. Very wine-friendly.</p></div>
+      <div class="card"><h3>Chilli heat <span class="risk h">HIGH RISK</span></h3><p>Increases the burning sensation of alcohol, and bitterness. Choose lower-alcohol, fruity, off-dry whites.</p></div>
+      <div class="card"><h3>Bitterness <span class="risk h">HIGH RISK</span></h3><p>Bitter food increases bitterness in wine. Lower-tannin wines are safer.</p></div>
+    </div>
+    <div class="mini" data-topic="pairing"></div>
+    <div class="done-row"><button class="btn ghost done-btn" data-mod="pairing">✓ Mark module complete</button></div>
+  </div>
+</section>
+
+<!-- MODULE 6 -->
+<section class="mod" id="service">
+  <div class="wrap">
+    <div class="kicker">Module 6</div>
+    <h2>Storage, service &amp; responsibility</h2>
+    <p class="intro">Serving temperature can make or break a wine. Tap a style to see where it belongs on the thermometer.</p>
+
+    <div class="card thermo reveal">
+      <div class="tube" id="tube"><div class="merc" id="merc"></div><div class="ticks" id="ticks"></div></div>
+      <div>
+        <div class="temp-read" id="tempRead">—</div>
+        <p id="tempWhy" style="color:var(--muted);margin-bottom:14px">Choose a wine style.</p>
+        <div class="temp-btns" id="tempBtns"></div>
+      </div>
+    </div>
+
+    <h3 class="panel-title">Storage &amp; serving essentials</h3>
+    <div class="grid g3 reveal">
+      <div class="card"><h3>🗄️ Storing</h3><ul><li>Store bottles with corks <b>lying on their side</b> so the cork stays moist and doesn't let air in.</li><li>Keep <b>cool</b> and at a <b>constant temperature</b>, in the <b>dark</b>, away from vibration and strong smells.</li></ul></div>
+      <div class="card"><h3>🍾 Opening sparkling</h3><ul><li>Chill well (reduces pressure).</li><li>Remove foil, loosen cage, keep a hand on the cork.</li><li>Tilt the bottle at ~45°, pointed away from people, and <b>turn the bottle, not the cork</b>. Ease it out with a gentle sigh, not a pop.</li></ul></div>
+      <div class="card"><h3>🍷 Glasses</h3><ul><li>Clean, odourless glasses (detergent and dust affect aroma).</li><li><b>Red</b>: larger bowl. <b>White/rosé</b>: medium. <b>Sparkling</b>: flute. <b>Fortified</b>: small glass.</li><li>Fill only partly so the wine can be swirled.</li></ul></div>
+      <div class="card"><h3>💾 Leftovers</h3><ul><li>Re-seal and refrigerate.</li><li><b>Vacuum pump</b> or <b>inert gas</b> slows oxidation of still wine.</li><li>Use a special sparkling-wine stopper for fizz.</li></ul></div>
+      <div class="card"><h3>⚠️ Faults</h3><ul><li><b>Cork taint</b>: musty, damp cardboard smell; fruit dulled.</li><li><b>Oxidation</b>: brown colour, flat, stale/nutty when it shouldn't be — e.g. a bottle left open too long.</li></ul></div>
+      <div class="card"><h3>🚦 Responsible drinking</h3><ul><li>Alcohol affects judgement and health. Never drink and drive.</li><li>At tastings, <b>spit</b> and drink water.</li><li>Know the guidelines where you live (e.g. UK: no more than 14 units a week, spread over 3+ days).</li></ul></div>
+    </div>
+
+    <h3 class="panel-title">Units calculator</h3>
+    <div class="card reveal">
+      <p style="margin-bottom:14px">In the UK, 1 unit = 10 ml of pure alcohol. <b>Units = ABV% × volume (litres)</b>.</p>
+      <div class="calc">
+        <label>Serving<select id="uVol"><option value="125">Small glass (125 ml)</option><option value="175" selected>Medium glass (175 ml)</option><option value="250">Large glass (250 ml)</option><option value="750">Bottle (750 ml)</option></select></label>
+        <label>ABV %<input type="number" id="uAbv" value="12.5" min="0" max="25" step="0.5"></label>
+        <div><div class="units-out" id="uOut">2.2</div><span style="color:var(--dim);font-size:.85rem">units</span></div>
+      </div>
+    </div>
+
+    <div class="mini" data-topic="service"></div>
+    <div class="done-row"><button class="btn ghost done-btn" data-mod="service">✓ Mark module complete</button></div>
+  </div>
+</section>
+
+<!-- EXAM -->
+<section class="mod" id="exam">
+  <div class="wrap">
+    <div class="kicker">Final step</div>
+    <h2>Mock exam</h2>
+    <p class="intro">Modelled on the real paper: <b>30 multiple-choice questions</b>, <b>45 minutes</b>, closed book, <b>70% (21/30) to pass</b>. Questions are drawn at random from a bank of 80+, weighted across the syllabus, so every attempt is different.</p>
+    <div class="exam-shell" id="examShell"></div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <p>Built as an independent study aid. Not affiliated with or endorsed by the Wine &amp; Spirit Education Trust (WSET®). Practice questions are original and are not taken from real exam papers.</p>
+    <p style="margin-top:8px">Please enjoy wine responsibly. 🍇</p>
+  </div>
+</footer>
+
+<script>
+/* ---------- helpers ---------- */
+const $ = s => document.querySelector(s);
+const $$ = s => [...document.querySelectorAll(s)];
+const shuffle = a => { a = [...a]; for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; };
+const store = {
+  get(k, d) { try { const v = localStorage.getItem('g2g_' + k); return v ? JSON.parse(v) : d; } catch (e) { return d; } },
+  set(k, v) { try { localStorage.setItem('g2g_' + k, JSON.stringify(v)); } catch (e) {} }
+};
+
+/* ---------- hero bubbles ---------- */
+(() => {
+  const h = $('.hero');
+  for (let i = 0; i < 22; i++) {
+    const b = document.createElement('div'); b.className = 'bubble';
+    const s = 6 + Math.random() * 22;
+    Object.assign(b.style, { width: s + 'px', height: s + 'px', left: Math.random() * 100 + '%', animationDuration: 8 + Math.random() * 12 + 's', animationDelay: -Math.random() * 15 + 's' });
+    h.appendChild(b);
+  }
+})();
+
+/* ---------- reveal on scroll + nav highlight ---------- */
+const io = new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); } }), { threshold: .12 });
+$$('.reveal').forEach(el => io.observe(el));
+const secIO = new IntersectionObserver(es => es.forEach(e => {
+  if (e.isIntersecting) $$('.navlinks a').forEach(a => a.classList.toggle('active', a.getAttribute('href') === '#' + e.target.id));
+}), { rootMargin: '-45% 0px -50% 0px' });
+$$('section.mod').forEach(s => secIO.observe(s));
+
+/* ---------- progress ---------- */
+const MODS = ['styles', 'making', 'grapes', 'tasting', 'pairing', 'service'];
+let done = store.get('done', []);
+function renderProgress() {
+  $('#progTxt').textContent = `${done.length} of 6 modules`;
+  $('#progBar').style.width = (done.length / 6 * 100) + '%';
+  $$('.done-btn').forEach(b => { const on = done.includes(b.dataset.mod); b.classList.toggle('on', on); b.textContent = on ? '✓ Completed' : '✓ Mark module complete'; });
+}
+$$('.done-btn').forEach(b => b.onclick = () => {
+  const m = b.dataset.mod;
+  done = done.includes(m) ? done.filter(x => x !== m) : [...done, m];
+  store.set('done', done); renderProgress();
+  if (done.includes(m)) { const i = MODS.indexOf(m); const next = MODS[i + 1] || 'exam'; setTimeout(() => document.getElementById(next).scrollIntoView({ behavior: 'smooth' }), 400); }
+});
+renderProgress();
+
+/* ---------- MODULE 1 ---------- */
+const COLOURS = [
+  { n: 'White', c: 'linear-gradient(135deg,#f6eeb0,#d9c46a)', t: 'Made from white (green-skinned) grapes, or from black grapes with no skin contact. Ranges from pale lemon to deep gold. Examples: Chablis, Sancerre, Mosel Riesling.' },
+  { n: 'Rosé', c: 'linear-gradient(135deg,#f7b8c0,#e07489)', t: 'Made from black grapes whose juice stays in contact with the skins for only a short time (hours, not days), extracting a little colour. Usually light-bodied with red-fruit flavours.' },
+  { n: 'Red', c: 'linear-gradient(135deg,#8e1f43,#3d0a1e)', t: 'Made from black grapes fermented with their skins, extracting colour and tannin. Ranges from pale ruby (e.g. Pinot Noir) to deep purple (e.g. Shiraz).' },
+];
+$('#colourRow').innerHTML = COLOURS.map((c, i) => `<div class="swatch" data-i="${i}"><div class="dot" style="background:${c.c}"></div>${c.n}</div>`).join('');
+$$('.swatch').forEach(s => s.onclick = () => { $$('.swatch').forEach(x => x.classList.remove('sel')); s.classList.add('sel'); const c = COLOURS[s.dataset.i]; $('#colourInfo').innerHTML = `<h3>${c.n} wine</h3><p>${c.t}</p>`; });
+const SWEET = [
+  ['Dry', 'Little or no sugar remains — the yeast fermented nearly all of it. Most wines are dry. e.g. Chablis, Bordeaux red, Sancerre.'],
+  ['Medium', 'Some noticeable sweetness, because fermentation was stopped before all sugar was converted. e.g. many German Rieslings, some rosés.'],
+  ['Sweet', 'Lots of sugar remains — often from very ripe or dried grapes, or grapes affected by noble rot. e.g. Sauternes, Tokaji, Port (fortified).'],
+];
+const BODY = [
+  ['Light', 'Feels delicate, like skimmed milk. Lower alcohol, little tannin. e.g. Mosel Riesling, Italian Pinot Grigio, Pinot Noir.'],
+  ['Medium', 'In between. e.g. Merlot, many unoaked Chardonnays.'],
+  ['Full', 'Feels rich and heavy, like whole milk. Higher alcohol and/or tannin, often from warm climates. e.g. Barossa Shiraz, Napa Cabernet, oaked Californian Chardonnay.'],
+];
+const sweetUpd = () => { const v = SWEET[$('#sweetR').value]; $('#sweetOut').innerHTML = `<b>${v[0]}</b><p style="color:var(--muted);font-size:.92rem">${v[1]}</p>`; };
+const bodyUpd = () => { const v = BODY[$('#bodyR').value]; $('#bodyOut').innerHTML = `<b>${v[0]}</b><p style="color:var(--muted);font-size:.92rem">${v[1]}</p>`; };
+$('#sweetR').oninput = sweetUpd; $('#bodyR').oninput = bodyUpd; sweetUpd(); bodyUpd();
+
+/* ---------- MODULE 2 ---------- */
+const ANAT = {
+  stem: ['Stem', 'Woody and green. Can add bitter, harsh tannins, so stems are usually removed before fermentation.'],
+  skin: ['Skin', 'Contains <b>colour</b>, <b>tannin</b> and many <b>flavours/aromas</b>. Black grape skins give red wine its colour. Yeast is also found on skins.'],
+  pulp: ['Pulp', 'The bulk of the grape: <b>water</b>, <b>sugar</b>, <b>acid</b>. Its juice is almost always colourless — even in black grapes.'],
+  seeds: ['Seeds (pips)', 'Contain bitter oils and harsh tannins. Winemakers avoid crushing them.'],
+};
+$$('.anatomy .part').forEach(p => p.onclick = () => {
+  $$('.anatomy .part').forEach(x => x.classList.toggle('sel', x.dataset.p === p.dataset.p));
+  const [t, d] = ANAT[p.dataset.p]; $('#anatInfo').innerHTML = `<h3>${t}</h3><p>${d}</p>`;
+});
+const CLIM = {
+  cool: { sun: .45, r: 14, col: '#9ab86a', m: [['Sugar → alcohol', 35], ['Acidity', 85], ['Body', 35]], f: 'Lower sugar, <b>higher acidity</b>, lighter body. Flavours: <b>green fruit</b> (apple, pear), <b>citrus</b>; for reds, <b>red fruit</b> (cranberry, red cherry). e.g. Chablis, Mosel, Burgundy.' },
+  warm: { sun: 1, r: 26, col: '#e0b25a', m: [['Sugar → alcohol', 85], ['Acidity', 35], ['Body', 85]], f: 'More sugar → <b>higher alcohol</b>, fuller body, <b>lower acidity</b>. Flavours: <b>stone fruit, tropical fruit</b> (peach, pineapple); for reds, <b>black fruit</b> (blackberry, black plum). e.g. Barossa, Napa, Central Valley Chile.' },
+};
+function drawClimate(k) {
+  const c = CLIM[k]; const s = $('#sunC'); s.setAttribute('opacity', c.sun); s.setAttribute('r', c.r); s.setAttribute('fill', c.col);
+  const berry = k === 'cool' ? '#8fa85a' : '#5a1838';
+  let g = ''; const pos = [[60, 70], [84, 70], [108, 70], [72, 92], [96, 92], [84, 114], [60, 92], [108, 92], [84, 136]];
+  pos.forEach(([x, y]) => g += `<circle cx="${x}" cy="${y}" r="12" fill="${berry}" style="transition:fill .8s"/>`);
+  $('#bunch').innerHTML = `<path d="M84 30 L84 58" stroke="#6b8f3a" stroke-width="4"/>` + g;
+  $('#climMeters').innerHTML = c.m.map(([l, v]) => `<div class="meter"><label><span>${l}</span></label><div class="bar"><i style="width:0" data-w="${v}"></i></div></div>`).join('');
+  requestAnimationFrame(() => setTimeout(() => $$('#climMeters i').forEach(i => i.style.width = i.dataset.w + '%'), 30));
+  $('#climFlav').innerHTML = c.f;
+}
+$$('#climToggle button').forEach(b => b.onclick = () => { $$('#climToggle button').forEach(x => x.classList.toggle('on', x === b)); drawClimate(b.dataset.c); });
+drawClimate('cool');
+const MAKE = {
+  white: [['Harvest', 'White (green-skinned) grapes are picked.'], ['Crush', 'Grapes are broken open to release the juice.'], ['Press', 'Juice is separated from the skins <b>before</b> fermentation.'], ['Ferment', 'Juice ferments at <b>cool temperatures</b> (≈12–22°C) to keep delicate fruit aromas.'], ['Store / mature', 'Usually in stainless steel for fresh, fruity styles; some (e.g. Chardonnay) in oak for vanilla/toast flavours.'], ['Bottle', 'Filtered and bottled — most whites are made to drink young.']],
+  rose: [['Harvest', 'Black grapes are picked.'], ['Crush', 'Grapes are broken open.'], ['Short skin contact', 'Juice sits with the skins for a <b>short time</b> (often 12–36 hours) to pick up a little colour.'], ['Separate', 'The pink juice is drawn off the skins.'], ['Ferment', 'Fermented cool, like a white wine, to keep fresh red-fruit aromas.'], ['Bottle', 'Usually bottled young for early drinking.']],
+  red: [['Harvest', 'Black grapes are picked.'], ['Crush', 'Grapes are broken open.'], ['Ferment with skins', 'Juice ferments <b>with the skins</b> at <b>warmer temperatures</b> (≈20–32°C) to extract colour and tannin.'], ['Press', 'After fermentation the wine is pressed off the skins.'], ['Mature', 'Some reds are aged in oak (adds tannin, vanilla, spice); others in tanks for fruity styles.'], ['Bottle', 'Bottled — some reds benefit from further ageing.']],
+};
+function drawMake(k) { $('#makeSteps').innerHTML = MAKE[k].map(([h, p], i) => `<div class="step" style="animation-delay:${i * .09}s"><div class="num">${i + 1}</div><div><h4>${h}</h4><p>${p}</p></div></div>`).join(''); }
+$$('#makeToggle button').forEach(b => b.onclick = () => { $$('#makeToggle button').forEach(x => x.classList.toggle('on', x === b)); drawMake(b.dataset.m); });
+drawMake('white');
+
+/* ---------- MODULE 3: grapes ---------- */
+const GRAPES = [
+  { n: 'Chardonnay', c: 'white', bg: 'linear-gradient(160deg,#c9b35a,#5a4a14)', b: '#cfd77a', style: 'Dry; medium–full body. Very versatile — the style depends heavily on climate and oak.', flav: 'Cool: green apple, citrus. Moderate: stone fruit (peach), melon. Warm: tropical (pineapple, banana). Oak: vanilla, toast, butter.', places: 'Burgundy (incl. Chablis), California, Australia', note: 'Unoaked Chablis is lean and citrussy; oaked California Chardonnay is full and rich.' },
+  { n: 'Sauvignon Blanc', c: 'white', bg: 'linear-gradient(160deg,#9ec46a,#2f4a14)', b: '#b7d27a', style: 'Dry; light–medium body; high acidity. Aromatic; usually unoaked.', flav: 'Green & herbaceous: grass, green bell pepper, asparagus; gooseberry, passion fruit.', places: 'Loire (Sancerre, Pouilly-Fumé), Marlborough (New Zealand)', note: 'Marlborough is more pungent and tropical; Sancerre more restrained and citrus/green.' },
+  { n: 'Riesling', c: 'white', bg: 'linear-gradient(160deg,#e3d67c,#5e5418)', b: '#e0e08a', style: 'Dry to very sweet; light body; high acidity. Aromatic and almost always unoaked.', flav: 'Floral, green apple, citrus (lime), stone fruit (peach). Can age to honey and toast notes.', places: 'Germany (Mosel), Alsace (France), Australia (Clare & Eden Valley)', note: 'German Rieslings are often low in alcohol with some sweetness; Alsace and Australian versions are often dry.' },
+  { n: 'Pinot Grigio / Gris', c: 'white', bg: 'linear-gradient(160deg,#c7a6a0,#4a2e2a)', b: '#c9a9a0', style: 'Italy (as Pinot Grigio): dry, light, delicate. Alsace (as Pinot Gris): fuller, richer, sometimes off-dry.', flav: 'Grigio: citrus, green apple, pear — fairly neutral. Gris: riper stone fruit, honey, spice.', places: 'North-east Italy (Pinot Grigio), Alsace (Pinot Gris)', note: 'Same grape, two names, two styles.' },
+  { n: 'Cabernet Sauvignon', c: 'black', bg: 'linear-gradient(160deg,#4a1838,#140610)', b: '#3a1030', style: 'Dry; full body; <b>high tannin</b>; high acidity. Often oaked. Needs warmth to ripen.', flav: 'Black fruit: blackcurrant, black cherry; green bell pepper, mint. Oak: vanilla, cedar.', places: 'Bordeaux — Left Bank (Médoc), Napa Valley (California), Coonawarra (Australia), Chile', note: 'Often blended with Merlot in Bordeaux.' },
+  { n: 'Merlot', c: 'black', bg: 'linear-gradient(160deg,#6e2246,#1e0814)', b: '#5c1c3e', style: 'Dry; medium–full body; <b>medium tannin</b> — softer, rounder than Cabernet Sauvignon.', flav: 'Red plum, red cherry (cooler); black plum, blackberry, fruitcake (warmer). Oak: vanilla, clove.', places: 'Bordeaux — Right Bank (Saint-Émilion, Pomerol), Chile, California', note: 'The soft partner in Bordeaux blends.' },
+  { n: 'Pinot Noir', c: 'black', bg: 'linear-gradient(160deg,#a43a52,#3a0c1a)', b: '#8a2a42', style: 'Dry; light–medium body; <b>low tannin</b>; high acidity. Pale colour. Needs a cool–moderate climate.', flav: 'Red fruit: strawberry, raspberry, red cherry. With age: mushroom, earthy notes.', places: 'Burgundy (France), New Zealand, California (also used in Champagne)', note: 'The lightest of the four key reds.' },
+  { n: 'Syrah / Shiraz', c: 'black', bg: 'linear-gradient(160deg,#3e1446,#100414)', b: '#341040', style: 'Dry; medium–full body; medium–high tannin; deep colour.', flav: 'Black fruit (blackberry, black plum); <b>black pepper</b> (Rhône); chocolate, sweet spice (warm Australia).', places: 'Northern Rhône (France) as Syrah; Barossa Valley (Australia) as Shiraz', note: 'Rhône Syrah is peppery and medium-bodied; Barossa Shiraz is full, ripe and high in alcohol.' },
+];
+function drawGrapes(f) {
+  $('#grapeGrid').innerHTML = GRAPES.filter(g => f === 'all' || g.c === f).map(g => `
+  <div class="flip" tabindex="0" role="button" aria-label="${g.n} card">
+    <div class="flip-inner">
+      <div class="face front" style="background:${g.bg}">
+        <div class="berry">${'<i style="background:' + g.b + '"></i>'.repeat(6)}</div>
+        <span class="tag" style="align-self:flex-start;background:rgba(0,0,0,.3);color:#fff">${g.c === 'white' ? 'White grape' : 'Black grape'}</span>
+        <h3>${g.n}</h3><div class="hint">tap to flip ↻</div>
+      </div>
+      <div class="face back"><h4>${g.n}</h4><dl>
+        <dt>Style</dt><dd>${g.style}</dd><dt>Flavours</dt><dd>${g.flav}</dd><dt>Famous for</dt><dd>${g.places}</dd><dt>Remember</dt><dd>${g.note}</dd></dl></div>
+    </div></div>`).join('');
+  $$('.flip').forEach(c => { c.onclick = () => c.classList.toggle('flipped'); c.onkeydown = e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); c.classList.toggle('flipped'); } }; });
+}
+$$('#grapeFilters .chip').forEach(b => b.onclick = () => { $$('#grapeFilters .chip').forEach(x => x.classList.toggle('on', x === b)); drawGrapes(b.dataset.f); });
+drawGrapes('all');
+
+/* ---------- MODULE 4: tasting ---------- */
+const NOTE = {
+  Colour: ['lemon', 'gold', 'pink', 'purple', 'ruby', 'garnet'],
+  Intensity: ['pale', 'medium', 'deep'],
+  Aromas: ['green apple', 'citrus', 'peach', 'pineapple', 'strawberry', 'red cherry', 'blackberry', 'blackcurrant', 'floral', 'grass', 'black pepper', 'vanilla', 'toast'],
+  Sweetness: ['dry', 'medium', 'sweet'],
+  Acidity: ['low', 'medium', 'high'],
+  Tannin: ['low', 'medium', 'high'],
+  Body: ['light', 'medium', 'full'],
+  Finish: ['short', 'medium', 'long'],
+};
+const noteState = { Colour: 'ruby', Intensity: 'medium', Aromas: ['red cherry', 'strawberry'], Sweetness: 'dry', Acidity: 'high', Tannin: 'low', Body: 'light', Finish: 'medium' };
+const GLASSC = { lemon: '#efe39a', gold: '#d9b44a', pink: '#f2a0b0', purple: '#4a1040', ruby: '#8e1f3a', garnet: '#7a2a28' };
+function drawNoteFields() {
+  const isWhite = ['lemon', 'gold'].includes(noteState.Colour);
+  $('#noteFields').innerHTML = Object.entries(NOTE).map(([k, opts]) => {
+    if (k === 'Tannin' && isWhite) return '';
+    return `<div class="field"><span>${k}${k === 'Aromas' ? ' (pick several)' : ''}</span><div class="opts">${opts.map(o => {
+      const on = Array.isArray(noteState[k]) ? noteState[k].includes(o) : noteState[k] === o;
+      return `<button class="${on ? 'on' : ''}" data-k="${k}" data-v="${o}">${o}</button>`;
+    }).join('')}</div></div>`;
+  }).join('');
+  $$('#noteFields button').forEach(b => b.onclick = () => {
+    const { k, v } = b.dataset;
+    if (k === 'Aromas') { const a = noteState.Aromas; noteState.Aromas = a.includes(v) ? a.filter(x => x !== v) : [...a, v]; }
+    else noteState[k] = v;
+    drawNoteFields();
+  });
+  const s = noteState, white = ['lemon', 'gold'].includes(s.Colour);
+  const ar = s.Aromas.length ? s.Aromas.join(', ').replace(/, ([^,]*)$/, ' and $1') : 'subtle aromas';
+  $('#noteGlass').style.background = `radial-gradient(circle at 35% 30%, rgba(255,255,255,.35), ${GLASSC[s.Colour]} 60%)`;
+  $('#noteGlass').style.opacity = s.Intensity === 'pale' ? .55 : s.Intensity === 'medium' ? .8 : 1;
+  $('#noteText').textContent = `“A ${s.Intensity} ${s.Colour} wine with aromas of ${ar}. On the palate it is ${s.Sweetness}, with ${s.Acidity} acidity${white ? '' : ', ' + s.Tannin + ' tannin'} and a ${s.Body} body, leading to a ${s.Finish} finish.”`;
+}
+drawNoteFields();
+const MYST = [
+  ['A pale ruby wine with red cherry and strawberry. Dry, light body, low tannin, high acidity.', 'Pinot Noir'],
+  ['A deep purple wine with blackcurrant, green bell pepper and cedar. Dry, full-bodied, high tannin.', 'Cabernet Sauvignon'],
+  ['A deep purple wine with blackberry and a distinct black pepper aroma. Dry, medium-plus tannin.', 'Syrah / Shiraz'],
+  ['A medium ruby wine with ripe red plum and soft, medium tannins. Smooth and round.', 'Merlot'],
+  ['A pale lemon wine with pungent grass, gooseberry and passion fruit. Dry with high acidity.', 'Sauvignon Blanc'],
+  ['A pale lemon wine with lime, floral and peach aromas. Off-dry, light body, high acidity, low alcohol.', 'Riesling'],
+  ['A medium gold wine with pineapple, vanilla and toast. Dry, full-bodied.', 'Chardonnay'],
+  ['A very pale lemon wine with delicate pear and citrus. Dry, light body, quite neutral.', 'Pinot Grigio / Gris'],
+  ['A pale lemon wine with green apple and lemon, no oak at all. Dry, high acidity — from Chablis.', 'Chardonnay'],
+  ['A deep ruby wine from the Barossa Valley: ripe blackberry, chocolate, high alcohol, full body.', 'Syrah / Shiraz'],
+];
+let mDeck = shuffle(MYST), mIdx = 0, mGot = 0, mTried = 0, mLocked = false;
+function drawMyst() {
+  const [d, a] = mDeck[mIdx % mDeck.length]; mLocked = false;
+  $('#mDesc').textContent = `“${d}”`; $('#mRes').textContent = '';
+  $('#mOpts').innerHTML = GRAPES.map(g => `<button data-n="${g.n}">${g.n}</button>`).join('');
+  $$('#mOpts button').forEach(b => b.onclick = () => {
+    if (mLocked) return; mLocked = true; mTried++;
+    const ok = b.dataset.n === a; if (ok) mGot++;
+    b.classList.add(ok ? 'right' : 'wrong');
+    if (!ok) $$('#mOpts button').find(x => x.dataset.n === a).classList.add('right');
+    $('#mRes').innerHTML = ok ? '🎉 Correct!' : `Not quite — that's <b>${a}</b>.`;
+    $('#mScore').textContent = `${mGot} / ${mTried}`;
+  });
+}
+$('#mNext').onclick = () => { mIdx++; drawMyst(); };
+drawMyst();
+
+/* ---------- MODULE 5: pairing ---------- */
+const ATTRS = ['Bitterness', 'Acidity', 'Fruitiness', 'Sweetness', 'Body', 'Alcohol burn'];
+const WINES = [
+  { n: 'Full-bodied, high-tannin red (Cabernet Sauvignon)', c: '#4a1838', v: [7, 6, 6, 1, 8, 5] },
+  { n: 'Light, fruity red (Pinot Noir)', c: '#a43a52', v: [3, 7, 7, 1, 4, 3] },
+  { n: 'Crisp dry white (Sauvignon Blanc)', c: '#b7d27a', v: [1, 8, 6, 1, 4, 3] },
+  { n: 'Off-dry white (German Riesling)', c: '#e0e08a', v: [1, 8, 7, 5, 3, 1] },
+  { n: 'Sweet dessert wine (Sauternes)', c: '#d9a83a', v: [1, 7, 8, 9, 7, 4] },
+];
+const FOODS = [
+  { n: 'On its own', e: '🍷', d: [0, 0, 0, 0, 0, 0], t: 'This is the wine on its own — your baseline.' },
+  { n: 'Sweet', e: '🍰', d: [2, 2, -3, -3, -1, 1], t: 'Sweetness in food makes the wine taste <b>more bitter and acidic</b>, and <b>less fruity and sweet</b>. Unless the wine is at least as sweet as the food, it will taste thin and sour.' },
+  { n: 'Umami', e: '🍄', d: [2, 2, -2, -1, -1, 1], t: 'Umami (mushrooms, ripe cheese, cured meats) acts like sweetness: wine seems <b>more bitter, drying and acidic</b>, <b>less fruity</b>. Adding salt to the dish helps.' },
+  { n: 'Acid', e: '🍋', d: [0, -3, 2, 1, 1, 0], t: 'Acidic food makes the wine seem <b>less acidic</b> and <b>fruitier, sweeter and richer</b>. A low-acid wine may taste flat — choose wines with plenty of acidity.' },
+  { n: 'Salt', e: '🧂', d: [-2, -2, 1, 0, 1, 0], t: 'Salt makes wine seem <b>less bitter and less acidic</b>, and smoother. Salty food is one of the easiest things to pair.' },
+  { n: 'Chilli', e: '🌶️', d: [2, 1, -2, -1, -1, 3], t: 'Chilli heat <b>increases the burn of alcohol</b> and bitterness, and reduces fruit and body. High-alcohol, tannic reds suffer most; fruity, off-dry, lower-alcohol whites cope best.' },
+];
+let pw = 0, pf = 0;
+$('#foodBtns').innerHTML = FOODS.map((f, i) => `<button data-i="${i}" class="${i === 0 ? 'on' : ''}"><span class="e">${f.e}</span>${f.n}</button>`).join('');
+$('#wineSel').innerHTML = WINES.map((w, i) => `<button data-i="${i}" class="${i === 0 ? 'on' : ''}"><i style="background:${w.c}"></i>${w.n}</button>`).join('');
+$('#pairBars').innerHTML = ATTRS.map(a => `<div class="attr"><span>${a}</span><div class="track"><div class="base"></div><div class="fill"></div></div><span class="delta"></span></div>`).join('');
+function drawPair() {
+  const w = WINES[pw], f = FOODS[pf];
+  $$('#foodBtns button').forEach(b => b.classList.toggle('on', +b.dataset.i === pf));
+  $$('#wineSel button').forEach(b => b.classList.toggle('on', +b.dataset.i === pw));
+  $('#pairTitle').textContent = pf === 0 ? 'Wine on its own' : `Wine + ${f.n.toLowerCase()} food`;
+  $$('#pairBars .attr').forEach((row, i) => {
+    let d = f.d[i];
+    if (pf === 1 && i === 3 && w.v[3] >= 8) d = -1; // sweet wine copes with sweet food
+    if (pf === 1 && w.v[3] >= 8) { if (i === 0 || i === 1) d = 0; if (i === 2) d = -1; }
+    const nv = Math.max(0, Math.min(10, w.v[i] + d));
+    row.querySelector('.base').style.left = w.v[i] * 10 + '%';
+    const fill = row.querySelector('.fill'); fill.style.width = nv * 10 + '%';
+    fill.style.background = d > 0 ? 'linear-gradient(90deg,#b8325c,#ef6b6b)' : d < 0 ? 'linear-gradient(90deg,#3a6ea8,#7ec8ff)' : 'linear-gradient(90deg,#8e1f43,#e0b25a)';
+    const dl = row.querySelector('.delta'); dl.textContent = d > 0 ? '▲ more' : d < 0 ? '▼ less' : ''; dl.className = 'delta ' + (d > 0 ? 'up' : d < 0 ? 'down' : '');
+  });
+  let t = f.t;
+  if (pf === 1 && w.v[3] >= 8) t = '✨ Success! Because this wine is <b>at least as sweet as the food</b>, it keeps its fruit and balance. That is the golden rule for desserts.';
+  else if (pf === 5 && pw === 0) t += '<br><br>❌ A big, tannic, high-alcohol red with chilli — a clash.';
+  else if (pf === 5 && pw === 3) t += '<br><br>✅ Off-dry, low-alcohol Riesling is a classic choice for spicy food.';
+  $('#pairVerdict').innerHTML = t;
+}
+$$('#foodBtns button').forEach(b => b.onclick = () => { pf = +b.dataset.i; drawPair(); });
+$$('#wineSel button').forEach(b => b.onclick = () => { pw = +b.dataset.i; drawPair(); });
+setTimeout(drawPair, 50);
+
+/* ---------- MODULE 6: service ---------- */
+const TEMPS = [
+  { n: 'Sweet wines', r: '6–8°C', lo: 6, hi: 8, w: 'Well chilled.', why: 'Chilling keeps sweet wines fresh rather than cloying.', c: '#d9a83a' },
+  { n: 'Sparkling wines', r: '6–10°C', lo: 6, hi: 10, w: 'Well chilled.', why: 'Cold keeps bubbles lively and reduces the pressure, making the bottle safer to open.', c: '#f0e0a0' },
+  { n: 'Light & medium-bodied whites, rosé', r: '7–10°C', lo: 7, hi: 10, w: 'Chilled.', why: 'Keeps them refreshing and crisp. e.g. Sauvignon Blanc, Pinot Grigio, rosé.', c: '#efe39a' },
+  { n: 'Medium & full-bodied oaked whites', r: '10–13°C', lo: 10, hi: 13, w: 'Lightly chilled.', why: 'Too cold would mute their richer flavours. e.g. oaked Chardonnay.', c: '#d9b44a' },
+  { n: 'Light-bodied reds', r: '≈13°C', lo: 12, hi: 13, w: 'Lightly chilled.', why: 'A slight chill brings out fresh fruit. e.g. some lighter Pinot Noir, Beaujolais.', c: '#b8325c' },
+  { n: 'Medium & full-bodied reds', r: '15–18°C', lo: 15, hi: 18, w: 'Room temperature.', why: 'Too warm and alcohol seems hot; too cold and tannins seem harsh and bitter. e.g. Cabernet Sauvignon, Shiraz.', c: '#6e1a38' },
+];
+const tmin = 4, tmax = 20, tpos = t => (t - tmin) / (tmax - tmin) * 100;
+$('#ticks').innerHTML = [6, 8, 10, 13, 15, 18].map(t => `<span style="bottom:calc(${tpos(t)}% - 8px)">— ${t}°C</span>`).join('');
+$('#tempBtns').innerHTML = TEMPS.map((t, i) => `<button data-i="${i}">${t.n}<small>${t.w}</small></button>`).join('');
+$$('#tempBtns button').forEach(b => b.onclick = () => {
+  const t = TEMPS[+b.dataset.i];
+  $$('#tempBtns button').forEach(x => x.classList.toggle('on', x === b));
+  $('#merc').style.height = tpos((t.lo + t.hi) / 2) + '%';
+  $('#merc').style.background = `linear-gradient(0deg, ${t.c}, ${t.c}cc)`;
+  $('#tempRead').textContent = t.r;
+  $('#tempWhy').innerHTML = `<b>${t.w}</b> ${t.why}`;
+});
+const uCalc = () => { const v = +$('#uVol').value, a = +$('#uAbv').value || 0; $('#uOut').textContent = (a * v / 1000).toFixed(1); };
+$('#uVol').onchange = uCalc; $('#uAbv').oninput = uCalc; uCalc();
+
+/* ---------- QUESTION BANK ---------- */
+// t: topic, q: question, o: options (first is correct before shuffle), e: explanation
+const TOPICS = { types: 'Types & styles', making: 'Growing & making', grapes: 'Grape varieties', tasting: 'Tasting', pairing: 'Food & wine', service: 'Storage & service' };
+const BANK = [
+  // TYPES
+  { t: 'types', q: 'Which of these is a fortified wine?', o: ['Port', 'Champagne', 'Chablis', 'Prosecco'], e: 'Port has grape spirit added, making it a fortified wine.' },
+  { t: 'types', q: 'What creates the bubbles in a sparkling wine?', o: ['Carbon dioxide trapped in the wine', 'Grape spirit added after fermentation', 'Tannin from the grape skins', 'Ageing the wine in oak barrels'], e: 'CO₂ from fermentation is trapped in a sealed container, so it dissolves into the wine.' },
+  { t: 'types', q: 'A wine in which nearly all the sugar has been fermented into alcohol is described as…', o: ['Dry', 'Sweet', 'Fortified', 'Full-bodied'], e: 'If the yeast converts (nearly) all the sugar, little sweetness remains, so the wine is dry.' },
+  { t: 'types', q: 'Fortified wines usually have an alcohol level of…', o: ['15–22% ABV', '5–8% ABV', '8–11% ABV', '30–40% ABV'], e: 'Adding grape spirit lifts fortified wines to roughly 15–22% ABV.' },
+  { t: 'types', q: 'Which term describes how heavy or light a wine feels in the mouth?', o: ['Body', 'Acidity', 'Aroma', 'Finish'], e: 'Body is the sense of weight and richness — skimmed vs. whole milk.' },
+  { t: 'types', q: 'Rosé wines are usually made from…', o: ['Black grapes with a short period of skin contact', 'White grapes fermented with their skins', 'A blend of white wine and grape spirit', 'Black grapes fermented with skins for several weeks'], e: 'A brief contact with black grape skins gives rosé its pink colour.' },
+  { t: 'types', q: 'Which of the following adds to a wine\'s body?', o: ['High alcohol', 'High acidity', 'Low tannin', 'Very cold serving temperature'], e: 'Alcohol, sugar and tannin all increase body.' },
+  { t: 'types', q: 'Champagne and Cava are examples of…', o: ['Sparkling wines', 'Fortified wines', 'Sweet still wines', 'Red still wines'], e: 'Both are sparkling wines made with a second fermentation in the bottle.' },
+  { t: 'types', q: 'Most still wines have an alcohol level within which range?', o: ['8–15% ABV', '1–4% ABV', '18–22% ABV', '35–40% ABV'], e: 'Unfortified still wines generally fall between about 8% and 15%.' },
+  { t: 'types', q: 'A sweet wine has a lot of…', o: ['Residual sugar', 'Tannin', 'Carbon dioxide', 'Added spirit'], e: 'Sweetness comes from sugar left unfermented in the wine.' },
+  // MAKING
+  { t: 'making', q: 'Which two products are made by alcoholic fermentation?', o: ['Alcohol and carbon dioxide', 'Sugar and water', 'Tannin and acid', 'Alcohol and sugar'], e: 'Yeast converts sugar into alcohol and carbon dioxide (with heat).' },
+  { t: 'making', q: 'What converts grape sugar into alcohol?', o: ['Yeast', 'Oak', 'Sunlight', 'Tannin'], e: 'Yeast eats sugar and produces alcohol and CO₂.' },
+  { t: 'making', q: 'Where does a red wine get its colour from?', o: ['The grape skins', 'The grape pulp', 'The grape seeds', 'The stems'], e: 'Colour pigments are in the skins; the pulp of most black grapes is colourless.' },
+  { t: 'making', q: 'Which part of the grape contains most of the water, sugar and acid?', o: ['Pulp', 'Skin', 'Seeds', 'Stem'], e: 'The pulp is the juicy flesh: mostly water, sugar and acid.' },
+  { t: 'making', q: 'The key difference between red and white winemaking is that red wine…', o: ['Is fermented with the grape skins', 'Is fermented at a cooler temperature', 'Is always aged in stainless steel', 'Has its juice pressed off before fermentation'], e: 'Red wines ferment in contact with the skins to extract colour and tannin.' },
+  { t: 'making', q: 'White wines are usually fermented at cooler temperatures than reds in order to…', o: ['Preserve fresh, fruity aromas', 'Extract more tannin', 'Increase colour', 'Create bubbles'], e: 'Cool fermentation keeps delicate fruit aromas.' },
+  { t: 'making', q: 'As grapes ripen on the vine…', o: ['Sugar increases and acidity decreases', 'Sugar decreases and acidity increases', 'Both sugar and acidity increase', 'Both sugar and acidity decrease'], e: 'Ripening means more sugar and less acid.' },
+  { t: 'making', q: 'Wines from cool climates tend to have…', o: ['High acidity and lighter body', 'Low acidity and full body', 'High alcohol and tropical fruit', 'Black fruit and high alcohol'], e: 'Cool climates give less sugar (lower alcohol, lighter body) and keep acidity high.' },
+  { t: 'making', q: 'Which flavours are typical of white wines from warm climates?', o: ['Tropical fruit such as pineapple', 'Green apple and lemon', 'Grass and green pepper', 'Strawberry and raspberry'], e: 'Warmth ripens grapes fully, giving tropical and stone-fruit flavours.' },
+  { t: 'making', q: 'A vine needs which of the following to make sugar by photosynthesis?', o: ['Sunlight, carbon dioxide and water', 'Yeast, sugar and oxygen', 'Oak, sunlight and acid', 'Alcohol, water and nutrients'], e: 'Photosynthesis in the leaves uses sunlight, CO₂ and water.' },
+  { t: 'making', q: 'How can a winemaker make a medium or sweet wine?', o: ['Stop fermentation before all the sugar is converted', 'Ferment for longer at a high temperature', 'Leave the juice on the skins for longer', 'Age the wine in new oak'], e: 'Stopping fermentation early leaves residual sugar in the wine.' },
+  { t: 'making', q: 'Which flavours can oak contribute to a wine?', o: ['Vanilla and toast', 'Grass and gooseberry', 'Lemon and lime', 'Black pepper and mint'], e: 'Oak barrels can add vanilla, toast, smoke and spice — and some tannin.' },
+  { t: 'making', q: 'Why is it possible to make a white wine from black grapes?', o: ['The juice of most black grapes is colourless', 'Black grapes contain no tannin', 'Yeast removes colour during fermentation', 'Oak barrels remove the colour'], e: 'Colour is in the skins. Separate the juice quickly and it stays pale.' },
+  { t: 'making', q: 'For rosé wine, the juice stays in contact with the black grape skins for…', o: ['A short time, typically hours', 'Several weeks', 'Several months in barrel', 'No time at all'], e: 'Short skin contact gives just a little colour.' },
+  { t: 'making', q: 'Tannin in a red wine comes mainly from…', o: ['Grape skins (and seeds)', 'Grape pulp', 'Yeast', 'Carbon dioxide'], e: 'Tannin is extracted from skins and seeds during red fermentation (oak can add some too).' },
+  { t: 'making', q: 'Red wines are usually fermented at…', o: ['Warmer temperatures than whites', 'Colder temperatures than whites', 'Below freezing', 'The same temperature as sparkling wine'], e: 'Warmer fermentation helps extract colour and tannin from the skins.' },
+  { t: 'making', q: 'Which statement about grapes grown in a warm climate is correct?', o: ['They produce wines with higher alcohol', 'They produce wines with higher acidity', 'They always produce sweet wines', 'They produce wines with green fruit flavours'], e: 'More sugar at harvest → more alcohol after fermentation.' },
+  // GRAPES
+  { t: 'grapes', q: 'Chablis is made from which grape?', o: ['Chardonnay', 'Sauvignon Blanc', 'Riesling', 'Pinot Grigio'], e: 'Chablis, in northern Burgundy, makes unoaked, high-acid Chardonnay.' },
+  { t: 'grapes', q: 'Sancerre and Pouilly-Fumé are made from which grape?', o: ['Sauvignon Blanc', 'Chardonnay', 'Riesling', 'Pinot Gris'], e: 'These Loire Valley wines are Sauvignon Blanc.' },
+  { t: 'grapes', q: 'Marlborough in New Zealand is most famous for which white grape?', o: ['Sauvignon Blanc', 'Riesling', 'Pinot Grigio', 'Chardonnay'], e: 'Marlborough Sauvignon Blanc is pungent, with gooseberry and passion fruit.' },
+  { t: 'grapes', q: 'Which grape is the Mosel region of Germany most famous for?', o: ['Riesling', 'Chardonnay', 'Merlot', 'Syrah'], e: 'Mosel Rieslings are light, high in acidity and often off-dry.' },
+  { t: 'grapes', q: 'Barossa Valley in Australia is most famous for which grape?', o: ['Shiraz', 'Pinot Noir', 'Sauvignon Blanc', 'Pinot Grigio'], e: 'Barossa Shiraz is full-bodied with ripe black fruit and chocolate notes.' },
+  { t: 'grapes', q: 'A black pepper aroma is typical of which grape?', o: ['Syrah', 'Merlot', 'Pinot Noir', 'Chardonnay'], e: 'Syrah, especially from the Northern Rhône, often shows black pepper.' },
+  { t: 'grapes', q: 'Which black grape typically makes wines with the lightest body and lowest tannin?', o: ['Pinot Noir', 'Cabernet Sauvignon', 'Syrah', 'Merlot'], e: 'Pinot Noir is pale, light-bodied and low in tannin.' },
+  { t: 'grapes', q: 'Which grape is known for high tannin and blackcurrant flavours?', o: ['Cabernet Sauvignon', 'Pinot Noir', 'Merlot', 'Pinot Grigio'], e: 'Cabernet Sauvignon: blackcurrant, high tannin, high acidity.' },
+  { t: 'grapes', q: 'Compared with Cabernet Sauvignon, Merlot usually has…', o: ['Softer, lower tannin', 'Higher tannin', 'Higher acidity and lighter colour', 'Peppery aromas'], e: 'Merlot is softer and rounder, with medium tannin.' },
+  { t: 'grapes', q: 'Red Burgundy is made from which grape?', o: ['Pinot Noir', 'Merlot', 'Cabernet Sauvignon', 'Syrah'], e: 'Red Burgundy is Pinot Noir; white Burgundy is Chardonnay.' },
+  { t: 'grapes', q: 'Grassy and gooseberry aromas are typical of…', o: ['Sauvignon Blanc', 'Chardonnay', 'Pinot Gris', 'Merlot'], e: 'Sauvignon Blanc is herbaceous: grass, green pepper, gooseberry.' },
+  { t: 'grapes', q: 'Which aromatic white grape can make wines from bone dry to very sweet, and is rarely oaked?', o: ['Riesling', 'Chardonnay', 'Pinot Grigio', 'Sauvignon Blanc'], e: 'Riesling ranges from dry to lusciously sweet and is almost always unoaked.' },
+  { t: 'grapes', q: 'An Italian Pinot Grigio is typically…', o: ['Light-bodied, dry and fairly neutral', 'Full-bodied, oaked and buttery', 'Sweet with honey flavours', 'High in tannin'], e: 'Italian Pinot Grigio is light, crisp, dry and delicate.' },
+  { t: 'grapes', q: 'Compared with Italian Pinot Grigio, Pinot Gris from Alsace is usually…', o: ['Fuller-bodied and richer', 'Lighter and more neutral', 'Red in colour', 'Always sparkling'], e: 'Same grape, but Alsace Pinot Gris is riper, richer and sometimes off-dry.' },
+  { t: 'grapes', q: 'Which grape dominates red wines from the Médoc (Left Bank of Bordeaux)?', o: ['Cabernet Sauvignon', 'Pinot Noir', 'Syrah', 'Riesling'], e: 'The Left Bank is Cabernet Sauvignon country.' },
+  { t: 'grapes', q: 'Saint-Émilion and Pomerol (Right Bank of Bordeaux) are mostly made from…', o: ['Merlot', 'Pinot Noir', 'Syrah', 'Chardonnay'], e: 'Merlot dominates the Right Bank.' },
+  { t: 'grapes', q: 'Which white grape is most often aged in oak?', o: ['Chardonnay', 'Riesling', 'Sauvignon Blanc', 'Pinot Grigio'], e: 'Chardonnay works well with oak, which adds vanilla and toast.' },
+  { t: 'grapes', q: 'A Chardonnay from a warm region like California will typically show…', o: ['Tropical fruit such as pineapple', 'Lean green apple and lemon', 'Grass and green pepper', 'Black pepper'], e: 'Warm-climate Chardonnay is riper: peach, pineapple, often with oak.' },
+  { t: 'grapes', q: 'Syrah is the key black grape of which French region?', o: ['Northern Rhône', 'Loire', 'Alsace', 'Chablis'], e: 'Northern Rhône reds are made from Syrah.' },
+  { t: 'grapes', q: 'Which pair of grapes are blended to make many red Bordeaux wines?', o: ['Cabernet Sauvignon and Merlot', 'Pinot Noir and Syrah', 'Merlot and Riesling', 'Syrah and Pinot Noir'], e: 'Bordeaux reds are typically blends of Cabernet Sauvignon and Merlot.' },
+  { t: 'grapes', q: 'Strawberry and raspberry flavours in a pale red wine suggest…', o: ['Pinot Noir', 'Cabernet Sauvignon', 'Shiraz', 'Merlot from a hot region'], e: 'Red-fruit flavours and a pale colour point to Pinot Noir.' },
+  { t: 'grapes', q: 'Which is NOT a characteristic of Pinot Noir?', o: ['High tannin', 'Red-fruit flavours', 'Light body', 'Pale colour'], e: 'Pinot Noir is low in tannin.' },
+  { t: 'grapes', q: 'Which grape is a WHITE grape variety?', o: ['Riesling', 'Merlot', 'Syrah', 'Pinot Noir'], e: 'Riesling is white; the others are black grapes.' },
+  { t: 'grapes', q: 'Coonawarra (Australia) and Napa Valley (California) are both well known for…', o: ['Cabernet Sauvignon', 'Pinot Grigio', 'Riesling', 'Sauvignon Blanc'], e: 'Both are famous for full-bodied Cabernet Sauvignon.' },
+  { t: 'grapes', q: 'Which region is known for dry, aromatic Riesling and rich Pinot Gris?', o: ['Alsace', 'Bordeaux', 'Barossa Valley', 'Napa Valley'], e: 'Alsace in north-east France is known for both.' },
+  // TASTING
+  { t: 'tasting', q: 'In the systematic approach to tasting, what is assessed first?', o: ['Appearance', 'Nose', 'Palate', 'Conclusion'], e: 'Look, then smell, then taste, then conclude.' },
+  { t: 'tasting', q: 'What is the best way to assess a wine\'s colour?', o: ['Tilt the glass against a white background', 'Hold the glass up to a bright light', 'Look straight down into the glass', 'Compare it with a red tablecloth'], e: 'A white background shows true colour and intensity.' },
+  { t: 'tasting', q: 'Why do tasters swirl wine in the glass?', o: ['To release the aromas', 'To cool the wine', 'To remove the tannin', 'To make bubbles'], e: 'Swirling exposes the wine to air and releases aromas.' },
+  { t: 'tasting', q: 'Tannin is felt in the mouth as…', o: ['A drying, gripping feeling on the gums', 'A mouth-watering sensation', 'A warming feeling in the throat', 'A sweet taste on the tip of the tongue'], e: 'Tannin dries the mouth and grips the gums and teeth.' },
+  { t: 'tasting', q: 'A wine that makes your mouth water has high…', o: ['Acidity', 'Tannin', 'Sweetness', 'Body'], e: 'Acidity triggers saliva — it is mouth-watering.' },
+  { t: 'tasting', q: 'Alcohol in wine is felt as…', o: ['A warming sensation, especially at the back of the throat', 'A drying sensation on the gums', 'A tingling on the tip of the tongue', 'A sour taste on the sides of the tongue'], e: 'Alcohol warms; high alcohol can feel hot.' },
+  { t: 'tasting', q: 'How does the colour of a red wine usually change as it ages?', o: ['It becomes paler and more brown (garnet/tawny)', 'It becomes deeper and more purple', 'It turns pink', 'It does not change'], e: 'Reds lose colour and turn towards garnet and tawny with age.' },
+  { t: 'tasting', q: 'How does the colour of a white wine usually change as it ages?', o: ['It becomes deeper — gold, then amber', 'It becomes paler — almost water-white', 'It turns purple', 'It turns pink'], e: 'Whites deepen in colour towards gold and amber.' },
+  { t: 'tasting', q: 'Which of these is NOT assessed on the palate?', o: ['Colour', 'Sweetness', 'Tannin', 'Body'], e: 'Colour is part of appearance.' },
+  { t: 'tasting', q: 'The "finish" of a wine refers to…', o: ['How long the flavours last after swallowing or spitting', 'The colour at the rim of the glass', 'The cork used to seal the bottle', 'The final stage of fermentation'], e: 'Finish is the length of flavour afterwards — longer usually means higher quality.' },
+  { t: 'tasting', q: 'A young red wine is most likely to be which colour?', o: ['Purple', 'Tawny', 'Amber', 'Gold'], e: 'Young reds are purple or ruby.' },
+  // PAIRING
+  { t: 'pairing', q: 'Sweetness in food makes a wine taste…', o: ['More bitter and acidic, less fruity', 'Less acidic and more fruity', 'Sweeter and smoother', 'Less bitter and less acidic'], e: 'Sweet food is high-risk: it makes wine seem harsher.' },
+  { t: 'pairing', q: 'Salt in food makes a wine taste…', o: ['Less bitter and less acidic', 'More bitter and more acidic', 'More alcoholic', 'Less fruity'], e: 'Salt is wine-friendly: it softens bitterness and acidity.' },
+  { t: 'pairing', q: 'Acidity in food makes a wine taste…', o: ['Less acidic and more fruity', 'More acidic and more bitter', 'More bitter and drier', 'Higher in alcohol'], e: 'Acidic food balances the wine\'s acidity and lifts fruit.' },
+  { t: 'pairing', q: 'Chilli heat in food increases the perception of…', o: ['Alcohol burn', 'Sweetness', 'Fruitiness', 'Body'], e: 'Chilli makes alcohol feel hotter and increases bitterness.' },
+  { t: 'pairing', q: 'Umami in food makes a wine taste…', o: ['More bitter and acidic, less fruity', 'Sweeter and fruitier', 'Less bitter', 'Less acidic'], e: 'Umami acts like sweetness: high-risk.' },
+  { t: 'pairing', q: 'When pairing with a dessert, the wine should be…', o: ['At least as sweet as the food', 'Dry, to contrast the sweetness', 'High in tannin', 'Served at room temperature'], e: 'Otherwise the wine tastes thin, sour and bitter.' },
+  { t: 'pairing', q: 'Which wine is the best choice for a spicy, chilli-hot dish?', o: ['An off-dry, low-alcohol white', 'A full-bodied, high-tannin red', 'A high-alcohol fortified wine', 'A heavily oaked red'], e: 'Lower alcohol avoids burn; a touch of sweetness soothes the heat.' },
+  { t: 'pairing', q: 'Which two food components are considered "high risk" for wine?', o: ['Sweetness and umami', 'Salt and acid', 'Salt and sweetness', 'Acid and umami'], e: 'Sweetness and umami make wines harder and less fruity.' },
+  { t: 'pairing', q: 'Bitterness in food will…', o: ['Increase bitterness in the wine', 'Make the wine taste sweeter', 'Reduce the wine\'s acidity', 'Have no effect on the wine'], e: 'Bitterness adds to the bitterness of the wine.' },
+  { t: 'pairing', q: 'Which wine would suit a salty dish best?', o: ['A wine with high acidity — salt will soften it', 'Only a sweet dessert wine', 'Nothing — salt clashes with all wine', 'Only fortified wine'], e: 'Salt reduces perceived acidity, so crisp, high-acid wines pair well.' },
+  { t: 'pairing', q: 'A dish with a lemon dressing will make a low-acid wine taste…', o: ['Flat and flabby', 'Even more acidic', 'More tannic', 'More alcoholic'], e: 'Acidic food reduces perceived acidity — a low-acid wine loses freshness.' },
+  // SERVICE
+  { t: 'service', q: 'At what temperature should medium- and full-bodied red wines be served?', o: ['Room temperature, 15–18°C', 'Well chilled, 6–8°C', 'Chilled, 7–10°C', 'Warm, 22–25°C'], e: 'Too cold makes tannins harsh; too warm makes alcohol hot.' },
+  { t: 'service', q: 'Sweet wines should be served…', o: ['Well chilled (6–8°C)', 'At room temperature (15–18°C)', 'Lightly chilled (13°C)', 'Warm'], e: 'Sweet wines are served well chilled.' },
+  { t: 'service', q: 'Sparkling wines should be served…', o: ['Well chilled (6–10°C)', 'Lightly chilled (13°C)', 'At room temperature', 'Warm (20°C+)'], e: 'Chilling keeps bubbles lively and lowers the pressure for safer opening.' },
+  { t: 'service', q: 'Light-bodied reds such as some Pinot Noirs are best served…', o: ['Lightly chilled (around 13°C)', 'Well chilled (6–8°C)', 'Warm (around 22°C)', 'Frozen'], e: 'A light chill brings out their fresh fruit.' },
+  { t: 'service', q: 'Full-bodied oaked white wines (e.g. oaked Chardonnay) are best served…', o: ['Lightly chilled (10–13°C)', 'Well chilled (6–8°C)', 'At room temperature (18°C)', 'Very warm'], e: 'Too cold mutes their richer flavours.' },
+  { t: 'service', q: 'Why should bottles with corks be stored lying on their side?', o: ['To keep the cork moist so it does not dry out and let in air', 'To stop sediment forming', 'To make the wine sweeter', 'To save space only'], e: 'A dried cork shrinks, allowing oxygen in.' },
+  { t: 'service', q: 'Which conditions are best for storing wine?', o: ['Cool, dark and a constant temperature', 'Warm and brightly lit', 'Next to a radiator', 'In direct sunlight'], e: 'Heat, light and temperature changes all damage wine.' },
+  { t: 'service', q: 'When opening sparkling wine, you should…', o: ['Hold the cork and twist the bottle, tilted away from people', 'Pull the cork out sharply for a loud pop', 'Shake the bottle first', 'Use a corkscrew'], e: 'Keep control of the cork and turn the bottle — ease it out quietly.' },
+  { t: 'service', q: 'A musty, damp-cardboard smell in a wine is a sign of…', o: ['Cork taint', 'Oak ageing', 'High acidity', 'Noble rot'], e: 'Cork taint (TCA) gives a musty smell and dulls fruit.' },
+  { t: 'service', q: 'Which glass is generally best for red wine?', o: ['A glass with a larger bowl', 'A small, narrow glass', 'A flute', 'A tumbler'], e: 'A larger bowl lets red wine aromas develop.' },
+  { t: 'service', q: 'Which glass is usually used for sparkling wine?', o: ['A flute', 'A large red-wine glass', 'A small fortified-wine glass', 'A tumbler'], e: 'A flute helps preserve bubbles.' },
+  { t: 'service', q: 'How can an opened bottle of still wine be kept fresh for longer?', o: ['Use a vacuum pump or inert gas and refrigerate', 'Leave it open on the table', 'Store it somewhere warm', 'Shake it daily'], e: 'Removing oxygen and keeping it cool slows oxidation.' },
+  { t: 'service', q: 'Why should a glass only be partly filled?', o: ['So the wine can be swirled to release aromas', 'So the wine warms up faster', 'To make the wine sweeter', 'To reduce tannin'], e: 'Space in the glass allows swirling and collects aromas.' },
+  { t: 'service', q: 'Why must wine glasses be clean and free of detergent smells?', o: ['Residues and odours can spoil the wine\'s aroma and flavour', 'Detergent makes wine sweeter', 'Clean glasses keep wine colder', 'It makes no difference'], e: 'Any odour or residue affects how the wine smells and tastes.' },
+  { t: 'service', q: 'In the UK, how many units are in a 750 ml bottle of wine at 12% ABV?', o: ['9 units', '3 units', '12 units', '75 units'], e: 'Units = ABV × litres = 12 × 0.75 = 9.' },
+  { t: 'service', q: 'How many UK units are in a 175 ml glass of 12% wine?', o: ['About 2.1 units', 'About 1 unit', 'About 4 units', 'About 12 units'], e: '12 × 0.175 = 2.1 units.' },
+  { t: 'service', q: 'At a professional wine tasting, the most responsible approach is to…', o: ['Spit the wine and drink water', 'Finish every sample', 'Taste only on an empty stomach', 'Drink only the most expensive wines'], e: 'Spitting lets you taste many wines without drinking them.' },
+  { t: 'service', q: 'Red wines are best stored…', o: ['Away from direct sunlight', 'In direct sunlight', 'Next to the oven', 'Standing upright on a sunny shelf'], e: 'Light and heat damage wine.' },
+  { t: 'service', q: 'Serving a full-bodied red wine too cold will make it taste…', o: ['More tannic and bitter', 'Sweeter and fruitier', 'Higher in alcohol', 'More aromatic'], e: 'Cold accentuates tannin and mutes fruit.' },
+];
+
+/* ---------- mini checks (3 questions per module) ---------- */
+$$('.mini').forEach(box => {
+  const topic = box.dataset.topic;
+  const topicsFor = topic === 'types' ? ['types'] : [topic];
+  let qs = [];
+  const draw = () => {
+    qs = shuffle(BANK.filter(q => topicsFor.includes(q.t))).slice(0, 3).map(q => ({ ...q, sh: shuffle(q.o.map((txt, i) => ({ txt, ok: i === 0 }))) }));
+    box.innerHTML = `<h3 class="panel-title" style="margin-top:0">✦ Quick check</h3><div class="grid g3">${qs.map((q, qi) => `
+      <div class="card"><p style="color:var(--text);font-weight:600;margin-bottom:12px">${q.q}</p>
+      <div class="answers">${q.sh.map((o, oi) => `<button class="ans" data-q="${qi}" data-o="${oi}" style="padding:10px 12px;font-size:.88rem"><span class="L">${'ABCD'[oi]}</span>${o.txt}</button>`).join('')}</div>
+      <div class="explain"></div></div>`).join('')}</div>
+      <button class="btn ghost small" style="margin-top:14px">↻ New questions</button>`;
+    box.querySelectorAll('.ans').forEach(b => b.onclick = () => {
+      const q = qs[b.dataset.q]; const card = b.closest('.card');
+      if (card.dataset.done) return; card.dataset.done = 1;
+      const ok = q.sh[b.dataset.o].ok;
+      card.querySelectorAll('.ans').forEach((x, i) => { if (q.sh[i].ok) x.classList.add('right'); });
+      if (!ok) b.classList.add('wrong');
+      const ex = card.querySelector('.explain'); ex.innerHTML = (ok ? '✅ ' : '❌ ') + q.e; ex.classList.add('show');
+    });
+    box.querySelector('.btn').onclick = draw;
+  };
+  draw();
+});
+
+/* ---------- EXAM ---------- */
+const BLUEPRINT = { types: 4, making: 6, grapes: 9, tasting: 3, pairing: 4, service: 4 }; // = 30
+const EXAM_SECS = 45 * 60, PASS = .7;
+let ex = null, timerId = null;
+const shell = $('#examShell');
+
+function examHome() {
+  clearInterval(timerId);
+  const hist = store.get('hist', []);
+  const best = hist.length ? Math.max(...hist.map(h => h.pct)) : null;
+  shell.innerHTML = `
+    <div class="modes">
+      <div class="mode">
+        <div class="kicker">Exam conditions</div><h3>📝 Full mock exam</h3>
+        <ul><li>30 questions across the whole syllabus</li><li>45-minute countdown — auto-submits at zero</li><li>No feedback until the end, just like the real thing</li><li>Flag questions and jump between them</li></ul>
+        <button class="btn primary" id="startMock">Start mock exam</button>
+      </div>
+      <div class="mode">
+        <div class="kicker">Learn as you go</div><h3>🎯 Practice by topic</h3>
+        <ul><li>10 questions, untimed</li><li>Instant feedback and explanations</li><li>Target your weak spots</li></ul>
+        <select id="pTopic"><option value="all">All topics</option>${Object.entries(TOPICS).map(([k, v]) => `<option value="${k}">${v}</option>`).join('')}</select>
+        <button class="btn ghost" id="startPrac">Start practice</button>
+      </div>
+    </div>
+    ${hist.length ? `<p style="margin-top:22px;color:var(--muted);font-size:.9rem">📈 Mock attempts: <b>${hist.length}</b> · Best score: <b style="color:var(--gold)">${best}%</b> · Last: ${hist.slice(-5).map(h => `<span class="tag" style="color:${h.pct >= 70 ? 'var(--green)' : 'var(--red)'}">${h.pct}%</span>`).join('')}</p>` : ''}`;
+  $('#startMock').onclick = () => startExam('mock');
+  $('#startPrac').onclick = () => startExam('practice', $('#pTopic').value);
+}
+
+function buildMock() {
+  let qs = [];
+  for (const [t, n] of Object.entries(BLUEPRINT)) qs.push(...shuffle(BANK.filter(q => q.t === t)).slice(0, n));
+  return shuffle(qs);
+}
+function startExam(mode, topic) {
+  let qs = mode === 'mock' ? buildMock() : shuffle(BANK.filter(q => topic === 'all' || q.t === topic)).slice(0, 10);
+  qs = qs.map(q => ({ ...q, sh: shuffle(q.o.map((txt, i) => ({ txt, ok: i === 0 }))) }));
+  ex = { mode, topic, qs, cur: 0, ans: Array(qs.length).fill(null), flag: Array(qs.length).fill(false), left: EXAM_SECS, revealed: Array(qs.length).fill(false) };
+  if (mode === 'mock') {
+    timerId = setInterval(() => { ex.left--; updTimer(); if (ex.left <= 0) { clearInterval(timerId); finish(true); } }, 1000);
+  }
+  drawQ();
+  $('#exam').scrollIntoView({ behavior: 'smooth' });
+}
+function updTimer() {
+  const t = $('#timer'); if (!t) return;
+  const m = Math.floor(ex.left / 60), s = ex.left % 60;
+  t.textContent = `⏱ ${m}:${String(s).padStart(2, '0')}`;
+  t.classList.toggle('warn', ex.left <= 300);
+}
+function drawQ() {
+  const q = ex.qs[ex.cur], i = ex.cur, n = ex.qs.length, mock = ex.mode === 'mock';
+  const answered = ex.ans.filter(a => a !== null).length;
+  shell.innerHTML = `
+    <div class="exam-top">
+      <div><b>Question ${i + 1}</b> <span style="color:var(--dim)">of ${n}</span> · <span style="color:var(--dim);font-size:.85rem">${answered} answered</span></div>
+      ${mock ? '<div class="timer" id="timer"></div>' : `<span class="tag">Practice · ${ex.ans.filter((a, k) => a !== null && ex.qs[k].sh[a].ok).length} correct</span>`}
+    </div>
+    <div class="bar" style="margin-bottom:24px"><i style="width:${(i + 1) / n * 100}%"></i></div>
+    <div class="qtopic">${TOPICS[q.t]}</div>
+    <div class="qtext">${q.q}</div>
+    <div class="answers">${q.sh.map((o, k) => `<button class="ans" data-k="${k}"><span class="L">${'ABCD'[k]}</span>${o.txt}</button>`).join('')}</div>
+    <div class="explain" id="expl"></div>
+    <div class="exam-nav">
+      <div style="display:flex;gap:8px">
+        <button class="btn ghost small" id="prev" ${i === 0 ? 'disabled' : ''}>← Back</button>
+        ${mock ? `<button class="btn ghost small flagbtn ${ex.flag[i] ? 'on' : ''}" id="flag">⚑ ${ex.flag[i] ? 'Flagged' : 'Flag'}</button>` : ''}
+      </div>
+      <div style="display:flex;gap:8px">
+        <button class="btn ghost small" id="quit">Exit</button>
+        ${i < n - 1 ? '<button class="btn primary small" id="next">Next →</button>' : '<button class="btn primary small" id="submit">Submit ✓</button>'}
+      </div>
+    </div>
+    ${mock ? `<div class="qgrid">${ex.qs.map((_, k) => `<button data-k="${k}" class="${ex.ans[k] !== null ? 'ans-d' : ''} ${k === i ? 'cur' : ''} ${ex.flag[k] ? 'flag' : ''}">${k + 1}</button>`).join('')}</div>` : ''}`;
+  if (mock) updTimer();
+  const btns = $$('#examShell .answers .ans');
+  const paint = () => {
+    btns.forEach((b, k) => { b.classList.toggle('sel', ex.ans[i] === k && !(ex.mode === 'practice' && ex.revealed[i])); });
+    if (ex.mode === 'practice' && ex.revealed[i]) {
+      btns.forEach((b, k) => { if (q.sh[k].ok) b.classList.add('right'); else if (ex.ans[i] === k) b.classList.add('wrong'); });
+      const ok = q.sh[ex.ans[i]].ok;
+      const e = $('#expl'); e.innerHTML = (ok ? '✅ <b>Correct.</b> ' : '❌ <b>Not quite.</b> ') + q.e; e.classList.add('show');
+    }
+  };
+  btns.forEach((b, k) => b.onclick = () => {
+    if (ex.mode === 'practice' && ex.revealed[i]) return;
+    ex.ans[i] = k;
+    if (ex.mode === 'practice') { ex.revealed[i] = true; drawQ(); return; }
+    paint();
+    const g = $$('.qgrid button')[i]; if (g) g.classList.add('ans-d');
+  });
+  paint();
+  $('#prev').onclick = () => { ex.cur--; drawQ(); };
+  if ($('#next')) $('#next').onclick = () => { ex.cur++; drawQ(); };
+  if ($('#submit')) $('#submit').onclick = () => {
+    const un = ex.ans.filter(a => a === null).length;
+    if (un && !confirm(`You have ${un} unanswered question${un > 1 ? 's' : ''}. Submit anyway?`)) return;
+    finish(false);
+  };
+  if ($('#flag')) $('#flag').onclick = () => { ex.flag[i] = !ex.flag[i]; drawQ(); };
+  $('#quit').onclick = () => { if (confirm('Leave this attempt? Your answers will be lost.')) examHome(); };
+  $$('.qgrid button').forEach(b => b.onclick = () => { ex.cur = +b.dataset.k; drawQ(); });
+}
+function finish(timeUp) {
+  clearInterval(timerId);
+  const n = ex.qs.length;
+  const right = ex.qs.map((q, k) => ex.ans[k] !== null && q.sh[ex.ans[k]].ok);
+  const score = right.filter(Boolean).length, pct = Math.round(score / n * 100), passed = score / n >= PASS;
+  if (ex.mode === 'mock') { const h = store.get('hist', []); h.push({ pct, d: Date.now() }); store.set('hist', h.slice(-20)); }
+  const byT = {};
+  ex.qs.forEach((q, k) => { byT[q.t] = byT[q.t] || [0, 0]; byT[q.t][1]++; if (right[k]) byT[q.t][0]++; });
+  const C = 2 * Math.PI * 80;
+  const used = ex.mode === 'mock' ? EXAM_SECS - ex.left : 0;
+  shell.innerHTML = `
+    <div class="result-top">
+      <svg class="ring" viewBox="0 0 190 190">
+        <circle cx="95" cy="95" r="80" stroke="var(--card2)"/>
+        <circle class="fg" cx="95" cy="95" r="80" stroke="${passed ? 'var(--green)' : 'var(--red)'}" stroke-dasharray="${C}" stroke-dashoffset="${C}" id="ringFg"/>
+        <text x="95" y="92" text-anchor="middle" fill="var(--text)" font-size="38" font-family="Playfair Display" font-weight="800">${score}/${n}</text>
+        <text x="95" y="120" text-anchor="middle" fill="var(--muted)" font-size="16">${pct}%</text>
+      </svg>
+      <div>
+        ${timeUp ? '<span class="tag" style="color:var(--red)">⏱ Time ran out</span>' : ''}
+        <div class="verdict-big ${passed ? 'pass' : 'fail'}">${ex.mode === 'mock' ? (passed ? 'Pass! 🎉' : 'Not yet — keep going') : (passed ? 'Great practice! 🎉' : 'Keep practising')}</div>
+        <p style="color:var(--muted);margin:6px 0 14px">${ex.mode === 'mock' ? `Pass mark is 70% (${Math.ceil(n * PASS)}/${n}). ${passed ? 'You\'re on track for exam day.' : `You needed ${Math.ceil(n * PASS) - score} more correct answer${Math.ceil(n * PASS) - score === 1 ? '' : 's'}. Review the topics below.`}${used ? ` Time used: ${Math.floor(used / 60)}m ${used % 60}s.` : ''}` : 'Check the explanations below, then try another round.'}</p>
+        <div class="topic-bars">${Object.entries(byT).map(([t, [a, b]]) => `<div class="attr"><span>${TOPICS[t]}</span><div class="track"><div class="fill" style="width:0;background:${a / b >= .7 ? 'linear-gradient(90deg,#2f8a5f,#5fbf8f)' : 'linear-gradient(90deg,#b8325c,#ef6b6b)'}" data-w="${a / b * 100}"></div></div><span class="delta">${a}/${b}</span></div>`).join('')}</div>
+      </div>
+    </div>
+    <div style="display:flex;gap:10px;flex-wrap:wrap;margin:24px 0">
+      <button class="btn primary" id="again">${ex.mode === 'mock' ? 'New mock exam' : 'More practice'}</button>
+      <button class="btn ghost" id="home">Back to exam menu</button>
+      <button class="btn ghost" id="showWrong">Show only mistakes</button>
+    </div>
+    <h3 style="font-family:'Playfair Display';margin-bottom:6px">Review</h3>
+    <div id="review">${ex.qs.map((q, k) => {
+      const a = ex.ans[k], correct = q.sh.find(o => o.ok).txt;
+      return `<div class="review-item ${right[k] ? 'ok' : 'bad'}"><div class="q">${right[k] ? '✅' : '❌'} ${k + 1}. ${q.q}</div>
+        <div class="a">${a === null ? '<span style="color:var(--red)">Not answered</span>' : `Your answer: <span style="color:${right[k] ? 'var(--green)' : 'var(--red)'}">${q.sh[a].txt}</span>`}${right[k] ? '' : ` · Correct: <span style="color:var(--green)">${correct}</span>`}</div>
+        <div class="e">💡 ${q.e}</div></div>`;
+    }).join('')}</div>`;
+  requestAnimationFrame(() => setTimeout(() => {
+    $('#ringFg').style.strokeDashoffset = C * (1 - score / n);
+    $$('.topic-bars .fill').forEach(f => f.style.width = f.dataset.w + '%');
+  }, 60));
+  const mode = ex.mode, topic = ex.topic || 'all';
+  $('#again').onclick = () => startExam(mode, topic);
+  $('#home').onclick = examHome;
+  $('#showWrong').onclick = e => { const on = e.target.classList.toggle('on'); $$('.review-item.ok').forEach(r => r.classList.toggle('hidden', on)); e.target.textContent = on ? 'Show all' : 'Show only mistakes'; };
+  if (passed) confetti();
+  shell.scrollIntoView({ behavior: 'smooth' });
+}
+function confetti() {
+  const cols = ['#b8325c', '#e0b25a', '#f0a3b1', '#efe0a0', '#5fbf8f'];
+  for (let i = 0; i < 90; i++) {
+    const c = document.createElement('div'); c.className = 'confetti';
+    Object.assign(c.style, { left: Math.random() * 100 + 'vw', background: cols[i % cols.length], animationDuration: 2 + Math.random() * 2.5 + 's', animationDelay: Math.random() * .6 + 's', borderRadius: Math.random() > .5 ? '50%' : '2px' });
+    document.body.appendChild(c); setTimeout(() => c.remove(), 5500);
+  }
+}
+examHome();
+</script>
+</body>
+</html>
