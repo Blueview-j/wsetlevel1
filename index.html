@@ -42,7 +42,18 @@ nav .wrap{display:flex;align-items:center;gap:14px;height:62px}
 
 /* HERO */
 .hero{position:relative;min-height:88vh;display:flex;align-items:center;overflow:hidden;
-  background:radial-gradient(ellipse at 70% 40%,#4a1028 0%,transparent 60%),radial-gradient(ellipse at 10% 90%,#2b0f20 0%,transparent 55%)}
+  background:linear-gradient(90deg,rgba(20,8,14,.96) 0%,rgba(20,8,14,.82) 45%,rgba(20,8,14,.45) 100%),linear-gradient(0deg,var(--bg) 0%,transparent 30%),url("https://images.unsplash.com/photo-1563514227147-6d2ff665a6a0?auto=format&fit=crop&w=1800&q=70") center/cover,radial-gradient(ellipse at 70% 40%,#4a1028 0%,var(--bg) 60%)}
+.hero-photo{width:min(340px,80vw);aspect-ratio:4/5;border-radius:24px;border:1px solid rgba(224,178,90,.45);box-shadow:0 30px 60px rgba(0,0,0,.55),0 0 0 8px rgba(255,255,255,.04);
+  background:linear-gradient(180deg,transparent 60%,rgba(20,8,14,.6)),url("https://images.unsplash.com/photo-1555919807-c3b672ff8933?auto=format&fit=crop&w=700&q=70") center/cover,linear-gradient(135deg,#8e1f43,#3d0a1e);animation:float 6s ease-in-out infinite;transform:rotate(2deg)}
+@keyframes float{0%,100%{transform:rotate(2deg) translateY(0)}50%{transform:rotate(1deg) translateY(-12px)}}
+.banner{height:260px;border-radius:var(--radius);margin:0 0 40px;position:relative;overflow:hidden;box-shadow:var(--shadow);background-size:cover;background-position:center}
+.banner::after{content:"";position:absolute;inset:0;background:linear-gradient(90deg,rgba(20,8,14,.75),rgba(20,8,14,.1) 60%)}
+.banner span{position:absolute;left:24px;bottom:20px;z-index:2;font-family:"Playfair Display";font-style:italic;font-size:1.3rem;max-width:70%;text-shadow:0 2px 10px rgba(0,0,0,.6)}
+@media(max-width:600px){.banner{height:180px}.banner span{font-size:1.05rem}}
+.card.style-card{padding:0}
+.style-card .ph{height:190px;background-size:cover;background-position:center;transition:transform .6s}
+.style-card:hover .ph{transform:scale(1.06)}
+.style-card .body{padding:20px 22px 22px}
 .hero .wrap{display:grid;grid-template-columns:1.2fr .8fr;gap:40px;align-items:center;position:relative;z-index:2}
 .hero h1{font-size:clamp(2.6rem,6vw,4.6rem);font-weight:800}
 .hero h1 em{color:var(--gold);font-style:italic}
@@ -58,14 +69,14 @@ nav .wrap{display:flex;align-items:center;gap:14px;height:62px}
 .btn.small{padding:8px 16px;font-size:.85rem}
 .btn:disabled{opacity:.4;pointer-events:none}
 .glass-wrap{display:flex;justify-content:center}
-.glass-svg{width:min(300px,70vw);filter:drop-shadow(0 20px 40px rgba(142,31,67,.5))}
+
 .wine-fill{animation:pour 3.5s ease-out forwards;transform-origin:bottom}
 @keyframes pour{from{transform:scaleY(0)}to{transform:scaleY(1)}}
 .wave{animation:wave 3s ease-in-out infinite}
 @keyframes wave{0%,100%{transform:translateX(0)}50%{transform:translateX(-12px)}}
 .bubble{position:absolute;bottom:-20px;border-radius:50%;background:radial-gradient(circle at 30% 30%,rgba(255,240,200,.6),rgba(224,178,90,.08));animation:rise linear infinite;z-index:1}
 @keyframes rise{to{transform:translateY(-110vh) translateX(20px);opacity:0}}
-@media(max-width:820px){.hero .wrap{grid-template-columns:1fr;text-align:left}.glass-wrap{order:-1}.glass-svg{width:180px}.hero{min-height:auto;padding:40px 0 60px}}
+@media(max-width:820px){.hero .wrap{grid-template-columns:1fr;text-align:left}.glass-wrap{order:-1}.hero-photo{width:200px}.hero{min-height:auto;padding:40px 0 60px}}
 
 /* SECTIONS */
 section.mod{padding:90px 0;border-top:1px solid var(--line)}
@@ -147,8 +158,8 @@ input[type=range]{width:100%;accent-color:var(--wine2);height:30px}
 .flip.flipped .flip-inner{transform:rotateY(180deg)}
 .face{position:absolute;inset:0;backface-visibility:hidden;-webkit-backface-visibility:hidden;border-radius:var(--radius);padding:22px;border:1px solid var(--line);display:flex;flex-direction:column}
 .front{justify-content:flex-end;overflow:hidden}
-.front .berry{position:absolute;top:22px;right:22px;display:grid;grid-template-columns:repeat(3,22px);gap:2px;opacity:.95}
-.front .berry i{width:22px;height:22px;border-radius:50%;box-shadow:inset -4px -4px 8px rgba(0,0,0,.35),inset 3px 3px 6px rgba(255,255,255,.25)}
+.front{background-size:cover!important}
+.flip:hover .front{filter:brightness(1.1)}
 .front h3{font-size:1.7rem}
 .front .hint{font-size:.75rem;color:rgba(255,255,255,.65);margin-top:6px}
 .back{transform:rotateY(180deg);background:var(--card2);overflow-y:auto}
@@ -310,21 +321,7 @@ footer{padding:40px 0;text-align:center;color:var(--dim);font-size:.82rem;border
       </div>
     </div>
     <div class="glass-wrap">
-      <svg class="glass-svg" viewBox="0 0 200 320" aria-hidden="true">
-        <defs>
-          <clipPath id="bowl"><path d="M40 20 Q30 120 60 160 Q100 195 140 160 Q170 120 160 20 Z"/></clipPath>
-          <linearGradient id="wineG" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#c0365f"/><stop offset="1" stop-color="#5a0f2a"/></linearGradient>
-        </defs>
-        <g clip-path="url(#bowl)">
-          <g class="wine-fill">
-            <path class="wave" d="M10 95 Q45 85 80 95 T150 95 T220 95 V200 H10 Z" fill="url(#wineG)"/>
-          </g>
-        </g>
-        <path d="M40 20 Q30 120 60 160 Q100 195 140 160 Q170 120 160 20 Z" fill="rgba(255,255,255,.06)" stroke="rgba(255,255,255,.55)" stroke-width="3"/>
-        <path d="M56 40 Q50 100 66 140" stroke="rgba(255,255,255,.35)" stroke-width="4" fill="none" stroke-linecap="round"/>
-        <rect x="96" y="176" width="8" height="100" fill="rgba(255,255,255,.5)"/>
-        <ellipse cx="100" cy="284" rx="50" ry="10" fill="rgba(255,255,255,.45)"/>
-      </svg>
+      <div class="hero-photo" role="img" aria-label="A glass of red wine"></div>
     </div>
   </div>
 </header>
@@ -338,16 +335,16 @@ footer{padding:40px 0;text-align:center;color:var(--dim);font-size:.82rem;border
 
     <div class="grid g3 reveal">
       <div class="card style-card" onclick="this.classList.toggle('open')">
-        <div class="ico">🍷</div><h3>Still</h3><p>No noticeable bubbles. The vast majority of wine.</p>
-        <div class="more"><ul><li>Usually about <b>8–15% ABV</b>.</li><li>Can be white, rosé or red; dry to sweet.</li><li>Examples: Chablis, Rioja, Sancerre, Barossa Shiraz.</li></ul></div>
+        <div class="ph" style="background:url('https://images.unsplash.com/photo-1606655762823-63f1cda5431f?auto=format&fit=crop&w=700&q=70') center/cover,linear-gradient(135deg,#8e1f43,#3d0a1e)"></div><div class="body"><h3>Still</h3><p>No noticeable bubbles. The vast majority of wine.</p>
+        <div class="more"><ul><li>Usually about <b>8–15% ABV</b>.</li><li>Can be white, rosé or red; dry to sweet.</li><li>Examples: Chablis, Rioja, Sancerre, Barossa Shiraz.</li></ul></div></div>
       </div>
       <div class="card style-card" onclick="this.classList.toggle('open')">
-        <div class="ico">🥂</div><h3>Sparkling</h3><p>Bubbles of carbon dioxide trapped in the wine.</p>
-        <div class="more"><ul><li>CO₂ from a <b>second fermentation</b> in a sealed container is trapped, creating bubbles.</li><li>Usually around 12% ABV (some lighter).</li><li>Examples: Champagne, Cava (bottle) and Prosecco (tank).</li></ul></div>
+        <div class="ph" style="background:url('https://images.unsplash.com/photo-1580657274234-7339717f4541?auto=format&fit=crop&w=700&q=70') center/cover,linear-gradient(135deg,#efe0a0,#8a6a20)"></div><div class="body"><h3>Sparkling</h3><p>Bubbles of carbon dioxide trapped in the wine.</p>
+        <div class="more"><ul><li>CO₂ from a <b>second fermentation</b> in a sealed container is trapped, creating bubbles.</li><li>Usually around 12% ABV (some lighter).</li><li>Examples: Champagne, Cava (bottle) and Prosecco (tank).</li></ul></div></div>
       </div>
       <div class="card style-card" onclick="this.classList.toggle('open')">
-        <div class="ico">🥃</div><h3>Fortified</h3><p>Grape spirit has been added to the wine.</p>
-        <div class="more"><ul><li>Higher alcohol: usually <b>15–22% ABV</b>.</li><li>Can be dry (e.g. Fino Sherry) or sweet (e.g. Port).</li><li>Examples: Port, Sherry.</li></ul></div>
+        <div class="ph" style="background:url('https://images.unsplash.com/photo-1510267222691-b90c3f0494d6?auto=format&fit=crop&w=700&q=70') center/cover,linear-gradient(135deg,#7a3a18,#2a0e06)"></div><div class="body"><h3>Fortified</h3><p>Grape spirit has been added to the wine.</p>
+        <div class="more"><ul><li>Higher alcohol: usually <b>15–22% ABV</b>.</li><li>Can be dry (e.g. Fino Sherry) or sweet (e.g. Port).</li><li>Examples: Port, Sherry.</li></ul></div></div>
       </div>
     </div>
 
@@ -383,6 +380,7 @@ footer{padding:40px 0;text-align:center;color:var(--dim);font-size:.82rem;border
     <div class="kicker">Module 2</div>
     <h2>Grape growing &amp; winemaking</h2>
     <p class="intro">Wine is simply fermented grape juice — but the parts of the grape, the climate and the winemaker's choices shape everything in your glass.</p>
+    <div class="banner reveal" style="background-image:url('https://images.unsplash.com/photo-1643087448435-72f70bd4ce88?auto=format&fit=crop&w=1400&q=70'),linear-gradient(135deg,#4a1028,#1f0e17)"><span>From vineyard to barrel: every choice shapes the glass.</span></div>
 
     <h3 class="panel-title" style="margin-top:0">Anatomy of a grape</h3>
     <div class="card anatomy reveal">
@@ -448,6 +446,7 @@ footer{padding:40px 0;text-align:center;color:var(--dim);font-size:.82rem;border
     <div class="kicker">Module 3</div>
     <h2>The eight key grapes</h2>
     <p class="intro">The heart of the exam. Four white and four black varieties — learn each one's style, typical flavours and the places it's famous. <b>Tap a card to flip it.</b></p>
+    <div class="banner reveal" style="background-image:url('https://images.unsplash.com/photo-1727063207083-2a3bceae002f?auto=format&fit=crop&w=1400&q=70'),linear-gradient(135deg,#4a1028,#1f0e17)"><span>Eight varieties, one at a time.</span></div>
     <div class="filters" id="grapeFilters">
       <button class="chip on" data-f="all">All 8</button>
       <button class="chip" data-f="white">White grapes</button>
@@ -466,6 +465,7 @@ footer{padding:40px 0;text-align:center;color:var(--dim);font-size:.82rem;border
     <div class="kicker">Module 4</div>
     <h2>Tasting lab</h2>
     <p class="intro">The Level 1 Systematic Approach to Tasting follows three steps: <b>look</b>, <b>smell</b>, <b>taste</b> — then a conclusion. Build your own tasting note below.</p>
+    <div class="banner reveal" style="background-image:url('https://images.unsplash.com/photo-1641759756543-20168fcab299?auto=format&fit=crop&w=1400&q=70'),linear-gradient(135deg,#4a1028,#1f0e17)"><span>Look. Smell. Taste. Conclude.</span></div>
     <div class="sat reveal">
       <div class="card"><div class="big">👁️</div><h3>Appearance</h3><p>Tilt the glass against a white background. Note <b>intensity</b> (pale → deep) and <b>colour</b>: lemon/gold/amber; pink; purple/ruby/garnet/tawny. Whites deepen and reds pale (towards brown) with age.</p></div>
       <div class="card"><div class="big">👃</div><h3>Nose</h3><p>Swirl to release aromas, then sniff. Look for fruit (green, citrus, tropical, red, black), floral, spice, vegetal and oak notes (vanilla, toast).</p></div>
@@ -500,6 +500,7 @@ footer{padding:40px 0;text-align:center;color:var(--dim);font-size:.82rem;border
     <div class="kicker">Module 5</div>
     <h2>Food &amp; wine pairing</h2>
     <p class="intro">Food changes how a wine tastes. Pick a wine, then pick a food component and watch what happens to the wine on your palate. The dashed line shows the wine on its own.</p>
+    <div class="banner reveal" style="background-image:url('https://images.unsplash.com/photo-1598306442928-4d90f32c6866?auto=format&fit=crop&w=1400&q=70'),linear-gradient(135deg,#4a1028,#1f0e17)"><span>The right match lifts both the food and the wine.</span></div>
     <div class="pair reveal">
       <div>
         <div class="food-btns" id="foodBtns"></div>
@@ -530,6 +531,7 @@ footer{padding:40px 0;text-align:center;color:var(--dim);font-size:.82rem;border
     <div class="kicker">Module 6</div>
     <h2>Storage, service &amp; responsibility</h2>
     <p class="intro">Serving temperature can make or break a wine. Tap a style to see where it belongs on the thermometer.</p>
+    <div class="banner reveal" style="background-image:url('https://images.unsplash.com/photo-1578911373434-0cb395d2cbfb?auto=format&fit=crop&w=1400&q=70'),linear-gradient(135deg,#4a1028,#1f0e17)"><span>Lying down, cool and dark: how wine likes to rest.</span></div>
 
     <div class="card thermo reveal">
       <div class="tube" id="tube"><div class="merc" id="merc"></div><div class="ticks" id="ticks"></div></div>
@@ -578,6 +580,7 @@ footer{padding:40px 0;text-align:center;color:var(--dim);font-size:.82rem;border
 <footer>
   <div class="wrap">
     <p>Built as an independent study aid. Not affiliated with or endorsed by the Wine &amp; Spirit Education Trust (WSET®). Practice questions are original and are not taken from real exam papers.</p>
+    <p style="margin-top:8px">Photography via <a href="https://unsplash.com" target="_blank" rel="noopener">Unsplash</a>, used under the Unsplash License.</p>
     <p style="margin-top:8px">Please enjoy wine responsibly. 🍇</p>
   </div>
 </footer>
@@ -687,21 +690,20 @@ drawMake('white');
 
 /* ---------- MODULE 3: grapes ---------- */
 const GRAPES = [
-  { n: 'Chardonnay', c: 'white', bg: 'linear-gradient(160deg,#c9b35a,#5a4a14)', b: '#cfd77a', style: 'Dry; medium–full body. Very versatile — the style depends heavily on climate and oak.', flav: 'Cool: green apple, citrus. Moderate: stone fruit (peach), melon. Warm: tropical (pineapple, banana). Oak: vanilla, toast, butter.', places: 'Burgundy (incl. Chablis), California, Australia', note: 'Unoaked Chablis is lean and citrussy; oaked California Chardonnay is full and rich.' },
-  { n: 'Sauvignon Blanc', c: 'white', bg: 'linear-gradient(160deg,#9ec46a,#2f4a14)', b: '#b7d27a', style: 'Dry; light–medium body; high acidity. Aromatic; usually unoaked.', flav: 'Green & herbaceous: grass, green bell pepper, asparagus; gooseberry, passion fruit.', places: 'Loire (Sancerre, Pouilly-Fumé), Marlborough (New Zealand)', note: 'Marlborough is more pungent and tropical; Sancerre more restrained and citrus/green.' },
-  { n: 'Riesling', c: 'white', bg: 'linear-gradient(160deg,#e3d67c,#5e5418)', b: '#e0e08a', style: 'Dry to very sweet; light body; high acidity. Aromatic and almost always unoaked.', flav: 'Floral, green apple, citrus (lime), stone fruit (peach). Can age to honey and toast notes.', places: 'Germany (Mosel), Alsace (France), Australia (Clare & Eden Valley)', note: 'German Rieslings are often low in alcohol with some sweetness; Alsace and Australian versions are often dry.' },
-  { n: 'Pinot Grigio / Gris', c: 'white', bg: 'linear-gradient(160deg,#c7a6a0,#4a2e2a)', b: '#c9a9a0', style: 'Italy (as Pinot Grigio): dry, light, delicate. Alsace (as Pinot Gris): fuller, richer, sometimes off-dry.', flav: 'Grigio: citrus, green apple, pear — fairly neutral. Gris: riper stone fruit, honey, spice.', places: 'North-east Italy (Pinot Grigio), Alsace (Pinot Gris)', note: 'Same grape, two names, two styles.' },
-  { n: 'Cabernet Sauvignon', c: 'black', bg: 'linear-gradient(160deg,#4a1838,#140610)', b: '#3a1030', style: 'Dry; full body; <b>high tannin</b>; high acidity. Often oaked. Needs warmth to ripen.', flav: 'Black fruit: blackcurrant, black cherry; green bell pepper, mint. Oak: vanilla, cedar.', places: 'Bordeaux — Left Bank (Médoc), Napa Valley (California), Coonawarra (Australia), Chile', note: 'Often blended with Merlot in Bordeaux.' },
-  { n: 'Merlot', c: 'black', bg: 'linear-gradient(160deg,#6e2246,#1e0814)', b: '#5c1c3e', style: 'Dry; medium–full body; <b>medium tannin</b> — softer, rounder than Cabernet Sauvignon.', flav: 'Red plum, red cherry (cooler); black plum, blackberry, fruitcake (warmer). Oak: vanilla, clove.', places: 'Bordeaux — Right Bank (Saint-Émilion, Pomerol), Chile, California', note: 'The soft partner in Bordeaux blends.' },
-  { n: 'Pinot Noir', c: 'black', bg: 'linear-gradient(160deg,#a43a52,#3a0c1a)', b: '#8a2a42', style: 'Dry; light–medium body; <b>low tannin</b>; high acidity. Pale colour. Needs a cool–moderate climate.', flav: 'Red fruit: strawberry, raspberry, red cherry. With age: mushroom, earthy notes.', places: 'Burgundy (France), New Zealand, California (also used in Champagne)', note: 'The lightest of the four key reds.' },
-  { n: 'Syrah / Shiraz', c: 'black', bg: 'linear-gradient(160deg,#3e1446,#100414)', b: '#341040', style: 'Dry; medium–full body; medium–high tannin; deep colour.', flav: 'Black fruit (blackberry, black plum); <b>black pepper</b> (Rhône); chocolate, sweet spice (warm Australia).', places: 'Northern Rhône (France) as Syrah; Barossa Valley (Australia) as Shiraz', note: 'Rhône Syrah is peppery and medium-bodied; Barossa Shiraz is full, ripe and high in alcohol.' },
+  { n: 'Chardonnay', img: 'https://images.unsplash.com/photo-1596398267243-3e9b68ea5ad9?auto=format&fit=crop&w=600&q=70', c: 'white', bg: 'linear-gradient(160deg,#c9b35a,#5a4a14)', b: '#cfd77a', style: 'Dry; medium–full body. Very versatile — the style depends heavily on climate and oak.', flav: 'Cool: green apple, citrus. Moderate: stone fruit (peach), melon. Warm: tropical (pineapple, banana). Oak: vanilla, toast, butter.', places: 'Burgundy (incl. Chablis), California, Australia', note: 'Unoaked Chablis is lean and citrussy; oaked California Chardonnay is full and rich.' },
+  { n: 'Sauvignon Blanc', img: 'https://images.unsplash.com/photo-1605164881986-cf242f87f711?auto=format&fit=crop&w=600&q=70', c: 'white', bg: 'linear-gradient(160deg,#9ec46a,#2f4a14)', b: '#b7d27a', style: 'Dry; light–medium body; high acidity. Aromatic; usually unoaked.', flav: 'Green & herbaceous: grass, green bell pepper, asparagus; gooseberry, passion fruit.', places: 'Loire (Sancerre, Pouilly-Fumé), Marlborough (New Zealand)', note: 'Marlborough is more pungent and tropical; Sancerre more restrained and citrus/green.' },
+  { n: 'Riesling', img: 'https://images.unsplash.com/photo-1598897893004-df11da13128a?auto=format&fit=crop&w=600&q=70', c: 'white', bg: 'linear-gradient(160deg,#e3d67c,#5e5418)', b: '#e0e08a', style: 'Dry to very sweet; light body; high acidity. Aromatic and almost always unoaked.', flav: 'Floral, green apple, citrus (lime), stone fruit (peach). Can age to honey and toast notes.', places: 'Germany (Mosel), Alsace (France), Australia (Clare & Eden Valley)', note: 'German Rieslings are often low in alcohol with some sweetness; Alsace and Australian versions are often dry.' },
+  { n: 'Pinot Grigio / Gris', img: 'https://images.unsplash.com/photo-1630676938852-6a1f79b330a8?auto=format&fit=crop&w=600&q=70', c: 'white', bg: 'linear-gradient(160deg,#c7a6a0,#4a2e2a)', b: '#c9a9a0', style: 'Italy (as Pinot Grigio): dry, light, delicate. Alsace (as Pinot Gris): fuller, richer, sometimes off-dry.', flav: 'Grigio: citrus, green apple, pear — fairly neutral. Gris: riper stone fruit, honey, spice.', places: 'North-east Italy (Pinot Grigio), Alsace (Pinot Gris)', note: 'Same grape, two names, two styles.' },
+  { n: 'Cabernet Sauvignon', img: 'https://images.unsplash.com/photo-1582413736877-f05216ef31a7?auto=format&fit=crop&w=600&q=70', c: 'black', bg: 'linear-gradient(160deg,#4a1838,#140610)', b: '#3a1030', style: 'Dry; full body; <b>high tannin</b>; high acidity. Often oaked. Needs warmth to ripen.', flav: 'Black fruit: blackcurrant, black cherry; green bell pepper, mint. Oak: vanilla, cedar.', places: 'Bordeaux — Left Bank (Médoc), Napa Valley (California), Coonawarra (Australia), Chile', note: 'Often blended with Merlot in Bordeaux.' },
+  { n: 'Merlot', img: 'https://images.unsplash.com/photo-1604245671140-b87873f3adc1?auto=format&fit=crop&w=600&q=70', c: 'black', bg: 'linear-gradient(160deg,#6e2246,#1e0814)', b: '#5c1c3e', style: 'Dry; medium–full body; <b>medium tannin</b> — softer, rounder than Cabernet Sauvignon.', flav: 'Red plum, red cherry (cooler); black plum, blackberry, fruitcake (warmer). Oak: vanilla, clove.', places: 'Bordeaux — Right Bank (Saint-Émilion, Pomerol), Chile, California', note: 'The soft partner in Bordeaux blends.' },
+  { n: 'Pinot Noir', img: 'https://images.unsplash.com/photo-1664432786719-3f0deff9f17d?auto=format&fit=crop&w=600&q=70', c: 'black', bg: 'linear-gradient(160deg,#a43a52,#3a0c1a)', b: '#8a2a42', style: 'Dry; light–medium body; <b>low tannin</b>; high acidity. Pale colour. Needs a cool–moderate climate.', flav: 'Red fruit: strawberry, raspberry, red cherry. With age: mushroom, earthy notes.', places: 'Burgundy (France), New Zealand, California (also used in Champagne)', note: 'The lightest of the four key reds.' },
+  { n: 'Syrah / Shiraz', img: 'https://images.unsplash.com/photo-1664432786699-f9720a1237e5?auto=format&fit=crop&w=600&q=70', c: 'black', bg: 'linear-gradient(160deg,#3e1446,#100414)', b: '#341040', style: 'Dry; medium–full body; medium–high tannin; deep colour.', flav: 'Black fruit (blackberry, black plum); <b>black pepper</b> (Rhône); chocolate, sweet spice (warm Australia).', places: 'Northern Rhône (France) as Syrah; Barossa Valley (Australia) as Shiraz', note: 'Rhône Syrah is peppery and medium-bodied; Barossa Shiraz is full, ripe and high in alcohol.' },
 ];
 function drawGrapes(f) {
   $('#grapeGrid').innerHTML = GRAPES.filter(g => f === 'all' || g.c === f).map(g => `
   <div class="flip" tabindex="0" role="button" aria-label="${g.n} card">
     <div class="flip-inner">
-      <div class="face front" style="background:${g.bg}">
-        <div class="berry">${'<i style="background:' + g.b + '"></i>'.repeat(6)}</div>
+      <div class="face front" style="background:linear-gradient(180deg,rgba(20,8,14,0) 35%,rgba(20,8,14,.92) 85%),url('${g.img}') center/cover,${g.bg}">
         <span class="tag" style="align-self:flex-start;background:rgba(0,0,0,.3);color:#fff">${g.c === 'white' ? 'White grape' : 'Black grape'}</span>
         <h3>${g.n}</h3><div class="hint">tap to flip ↻</div>
       </div>
